@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file datatype="php" date="2015-07-29T12:24:26+02:00" original="tl_news" source-language="en" target-language="en">
+    <body>
+      <trans-unit id="tl_news.addPodcast.0">
+        <source>Add Podcast</source>
+        <target>Add Podcast</target>
+      </trans-unit>
+      <trans-unit id="tl_news.addPodcast.1">
+        <source>Add one podcast to the news item</source>
+        <target>Add one podcast to the news item</target>
+      </trans-unit>
+      <trans-unit id="tl_news.podcast.0">
+        <source>Podcast</source>
+        <target>Podcast</target>
+      </trans-unit>
+      <trans-unit id="tl_news.podcast.1">
+        <source>Choose one podcast file from the file system</source>
+        <target>Choose one podcast file from the file system</target>
+      </trans-unit>
+      <trans-unit id="tl_news.podcast_legend">
+        <source>Podcast</source>
+        <target>Podcast</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

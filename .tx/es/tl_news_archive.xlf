@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file datatype="php" date="2015-07-20T16:16:29+02:00" original="tl_news_archive" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="tl_news_archive.podcastfeeds.0">
+        <source>Podcast feeds</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.podcastfeeds.1">
+        <source>Manage Podcast feeds</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

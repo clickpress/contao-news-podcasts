@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+	<channel>
+		<title>Ein bisschen von allem</title>
+		<link>http://www.beispiel.de/podcasts/alles/index.html</link>
+		<language>de-de</language>
+		<copyright>&#x2117; &amp; &#xA9; 2014 Max Mustermann &amp; Familie</copyright>
+		<itunes:subtitle>Eine Sendung über alles</itunes:subtitle>
+		<itunes:author>Max Mustermann</itunes:author>
+		<itunes:summary>Ein bisschen von allem ist eine Sendung, in der es um alles Mögliche geht. Jede Woche nehmen wir
+			uns ein bestimmtes Thema vor und diskutieren ausführlich darüber. Du findest unseren Podcast in der Podcasts
+			App oder im iTunes Store.
+		</itunes:summary>
+		<description>Ein bisschen von allem ist eine Sendung, in der es um alles Mögliche geht. Jede Woche nehmen wir
+			uns ein bestimmtes Thema vor und diskutieren ausführlich darüber. Du findest unseren Podcast in der Podcasts
+			App oder im iTunes Store.
+		</description>
+		<itunes:owner>
+			<itunes:name>Max Mustermann</itunes:name>
+			<itunes:email>max.mustermann@beispiel.de</itunes:email>
+		</itunes:owner>
+		<itunes:image href="http://beispiel.de/podcasts/alles/EinBisschenVonAllem.jpg"/>
+		<itunes:category text="Technology">
+			<itunes:category text="Gadgets"/>
+		</itunes:category>
+		<itunes:category text="TV &amp; Film"/>
+		<item>
+
+			<title>Salz und Pfeffer</title>
+
+			<itunes:author>Max Mustermann</itunes:author>
+
+			<itunes:subtitle>Ein kurzer Beitrag zu Küchengewürzen</itunes:subtitle>
+
+			<itunes:summary>Diese Woche geht es um
+				<a href="https://itunes.apple.com/de/book/antique-trader-salt-pepper/id429691295?mt=11">Salz- und
+					Pfefferstreuer</a>, deren Streufähigkeiten, Fertigungsmaterial und Design. Sei dabei!
+			</itunes:summary>
+			<!--<itunes:summary><![CDATA[Diese Woche geht es um <a href="https://itunes.apple.com/de/book/antique-trader-salt-pepper/id429691295?mt=11">Salz- und Pfefferstreuer</a>, deren Streufähigkeiten, Fertigungsmaterial und Design. Sei dabei!]]</itunes:summary>-->
+
+
+			<itunes:image href="http://beispiel.de/podcasts/alles/EinBisschenVonAllem/Folge1.jpg"/>
+
+			<enclosure url="http://beispiel.de/podcasts/alles/EinBisschenVonAllemFolge3.m4a" length="8727310"
+					   type="audio/x-m4a"/>
+
+			<guid>http://beispiel.de/podcasts/archiv/aae20140615.m4a</guid>
+
+			<pubDate>Wed, 15 Jun 2014 19:00:00 GMT</pubDate>
+
+			<itunes:duration>7:04</itunes:duration>
+
+		</item>
+
+		<item>
+
+			<title>Duell der Steckschlüssel</title>
+
+			<itunes:author>Erika Mustermann</itunes:author>
+
+			<itunes:subtitle>Steckschlüssel vergleichen macht Spaß!</itunes:subtitle>
+
+			<itunes:summary>Diese Woche beschäftigen wir uns mit verschiedenen Steckschlüsseln. Welche sind die besten?
+				Braucht man wirklich mehrere? Hier findest du alle Antworten.
+			</itunes:summary>
+
+			<itunes:image href="http://beispiel.de/podcasts/alles/EinBisschenVonAllem/Folge2.jpg"/>
+
+			<enclosure url="http://beispiel.de/podcasts/alles/EinBisschenVonAllemFolge2.mp3" length="5650889"
+					   type="audio/mpeg"/>
+
+			<guid>http://beispiel.de/podcasts/archiv/aae20140608.mp3</guid>
+
+			<pubDate>Wed, 8 Jun 2014 19:00:00 GMT
+			<pubDate>
+
+			<itunes:duration>4:34</itunes:duration>
+
+		</item>
+
+		<item>
+
+			<title>Rot, Weiß &amp; Rosé</title>
+
+			<itunes:author>Verschiedene</itunes:author>
+
+			<itunes:subtitle>Rot + Weiß != Rosé</itunes:subtitle>
+
+			<itunes:summary>Diese Woche geht es um Rot-, Weiß- und Roséweine.</itunes:summary>
+
+			<itunes:image href="http://beispiel.de/podcasts/alles/EinBisschenVonAllem/Folge3.jpg"/>
+
+			<enclosure url="http://beispiel.de/podcasts/alles/EinBisschenVonAllemFolge1.mp3" length="498537"
+					   type="audio/mpeg"/>
+
+			<guid>http://beispiel.de/podcasts/archiv/aae20140601.mp3</guid>
+
+			<pubDate>Wed, 1 Jun 2014 19:00:00 GMT</pubDate>
+
+			<itunes:duration>3:59</itunes:duration>
+
+		</item>
+
+	</channel>
+
+</rss>

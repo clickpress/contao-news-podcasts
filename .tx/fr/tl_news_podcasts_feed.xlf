@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file datatype="php" date="2015-07-29T12:24:02+02:00" original="tl_news_podcasts_feed" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="tl_news_podcasts_feed.title.0">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.title.1">
+        <source>Please enter a feed title.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.alias.0">
+        <source>Feed alias</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.alias.1">
+        <source>Here you can enter a unique filename (without extension). The XML feed file will be auto-generated in the share directory of your Contao installation, e.g. as share/podcast.xml.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.language.0">
+        <source>Feed language</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.language.1">
+        <source>Please enter the feed language according to the ISO-639 standard (e.g. en or en-us).</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.subtitle.0">
+        <source>Subtitle</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.subtitle.1">
+        <source>Will be displayed in the description column in iTunes. For best results, choose a subtitle that is only a few words long.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.summary.0">
+        <source>Summary</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.summary.1">
+        <source>This shown on the iTunes Store page for your podcast. The information also appears in a separate window if the information (“i”) icon in the Description column is clicked. This field can be up to 4000 characters.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.category.0">
+        <source>Category</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.category.1">
+        <source>Users can browse podcast subject categories on iTunes. check https://www.apple.com/itunes/podcasts/specs.html#categories</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.owner.0">
+        <source>Owner</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.owner.1">
+        <source>This tag contains contact information for the owner of the podcast intended to be used for administrative communication about the podcast. This information is not displayed on the iTunes Store.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.email.0">
+        <source>E-mail</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.email.1">
+        <source>The owner's email address</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.image.0">
+        <source>Image for iTunes</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.image.1">
+        <source>Points to the artwork for your podcast. Cover art must be in the JPEG or PNG file formats and in the RGB color space with a minimum size of 1400 x 1400 pixels and a maximum size of 3000 x 3000 pixels.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.author.0">
+        <source>Author</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.author.1">
+        <source>The content of this tag is shown in the Artist column in iTunes.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.copyright.0">
+        <source>Copyright</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.copyright.1">
+        <source>The podcasts copyright</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.archives.0">
+        <source>News archives</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.archives.1">
+        <source>Here you can choose the news archives to be included in the feed.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.maxItems.0">
+        <source>Maximum number of items</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.maxItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.feedBase.0">
+        <source>Base URL</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.feedBase.1">
+        <source>Please enter the base URL with protocol (e.g. http://).</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.description.0">
+        <source>Feed description</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.description.1">
+        <source>Enter a short description of the iTunes feed.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.new.0">
+        <source>New podcast feed</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.new.1">
+        <source>Create a new feed</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.show.0">
+        <source>Feed details</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.show.1">
+        <source>Show the details of feed ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.edit.0">
+        <source>Edit feed</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.edit.1">
+        <source>Edit feed ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.copy.0">
+        <source>Duplicate feed</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.copy.1">
+        <source>Duplicate feed ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.delete.0">
+        <source>Delete feed</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.delete.1">
+        <source>Delete feed ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.title_legend">
+        <source>Title and language</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.archives_legend">
+        <source>News archives</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.config_legend">
+        <source>Feed settings</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.source_teaser">
+        <source>News teasers</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.author_legend">
+        <source>Author</source>
+      </trans-unit>
+      <trans-unit id="tl_news_podcasts_feed.description_legend">
+        <source>Description</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
