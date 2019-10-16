@@ -3,7 +3,7 @@
 /*
  * This file is part of NewsPodcasts.
  *
- * (c) Stefan Schulz-Lauterbach
+ * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
  * @license LGPL-3.0-or-later
  */
@@ -220,17 +220,17 @@ class NewsPodcastsBackend extends \News
     /*    public function generatePodcastFeed()
         {
             $session = $this->Session->get('podcasts_feed_updater');
-    
+
             if (!\is_array($session) || empty($session)) {
                 return;
             }
-    
+
             $feed = new NewsPodcasts();
-    
+
             foreach ($session as $id) {
                 $feed->generateFeeds($id);
             }
-    
+
             $this->Session->set('podcasts_feed_updater', null);
         }*/
 

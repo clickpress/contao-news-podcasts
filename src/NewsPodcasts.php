@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 /*
  * This file is part of NewsPodcasts.
  *
- * (c) Stefan Schulz-Lauterbach
+ * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
  * @license LGPL-3.0-or-later
  */
@@ -231,7 +232,7 @@ class NewsPodcasts extends Frontend
                         if (!empty($arrFeed['addStatistics'])) {
                             // If no trailing slash given, add one
                             $statisticsPrefix = rtrim($arrFeed['statisticsPrefix'], '/').'/';
-                            $podcastPath = $statisticsPrefix. Environment::get('host').'/'.preg_replace(
+                            $podcastPath = $statisticsPrefix.Environment::get('host').'/'.preg_replace(
                                     '(^https?://)',
                                     '',
                                     $objFile->path

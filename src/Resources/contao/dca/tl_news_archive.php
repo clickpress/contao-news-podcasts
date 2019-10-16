@@ -1,20 +1,16 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of NewsPodcasts.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
- * @package   cp_podcasts
- * @author    Stefan Schulz-Lauterbach
- * @license   GNU/LGPL
- * @copyright CLICKPRESS Internetagentur 2015
+ * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_news_archive']['list']['global_operations']['podcastfeeds'] = array
-(
-    'label'      => &$GLOBALS['TL_LANG']['tl_news_archive']['podcastfeeds'],
-    'href'       => 'table=tl_news_podcasts_feed',
-    'class'      => 'header_rss',
-    'attributes' => 'onclick="Backend.getScrollOffset()"'
-);
+$GLOBALS['TL_DCA']['tl_news_archive']['list']['global_operations']['podcastfeeds'] = [
+    'label' => &$GLOBALS['TL_LANG']['tl_news_archive']['podcastfeeds'],
+    'href' => 'table=tl_news_podcasts_feed',
+    'class' => 'header_rss',
+    'attributes' => 'onclick="Backend.getScrollOffset()"',
+];

@@ -1,13 +1,9 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of NewsPodcasts.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
- * @package   news_podcasts
- * @author    Stefan Schulz-Lauterbach
- * @license   GNU/LGPL
- * @copyright CLICKPRESS Internetagentur 2015
+ * @license LGPL-3.0-or-later
  */
-
