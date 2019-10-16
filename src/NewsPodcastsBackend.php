@@ -77,7 +77,7 @@ class NewsPodcastsBackend extends \News
      */
     public function listNewsPodcastArticles($arrRow)
     {
-        $strHtml = $arrRow['headline'].
+        $strHtml = $arrRow['headline'] .
                    ' <img src="bundles/newspodcasts/icon_mic.svg" width="16" height="16" alt="Podcast">';
         $arrRow['headline'] = ('1' === $arrRow['addPodcast']) ? $strHtml : $arrRow['headline'];
 
@@ -96,8 +96,8 @@ class NewsPodcastsBackend extends \News
         $date = Date::parse(Config::get('datimFormat'), $arrRow['date']);
 
         $html = '<div class="tl_content_left">'
-                .$arrRow['headline']
-                .' <span style="color:#999;padding-left:3px">['.$date.']</span></div>';
+                . $arrRow['headline']
+                . ' <span style="color:#999;padding-left:3px">[' . $date . ']</span></div>';
 
         return $html;
     }
@@ -186,7 +186,7 @@ class NewsPodcastsBackend extends \News
                                $root, true) || ('delete' === Input::get('act') && !$this->User->hasAccess('delete',
                                                                                                        'newspodcastsfeedp'))
                 ) {
-                    $this->log('Not enough permissions to '.Input::get('act').' podcast feed ID "'.Input::get('id').'"',
+                    $this->log('Not enough permissions to ' . Input::get('act') . ' podcast feed ID "' . Input::get('id') . '"',
                                 __METHOD__, TL_ERROR);
                     $this->redirect('contao/main.php?act=error');
                 }
@@ -206,7 +206,7 @@ class NewsPodcastsBackend extends \News
 
             default:
                 if (\strlen(Input::get('act'))) {
-                    $this->log('Not enough permissions to '.Input::get('act').' podcast feeds', __METHOD__,
+                    $this->log('Not enough permissions to ' . Input::get('act') . ' podcast feeds', __METHOD__,
                                 TL_ERROR);
                     $this->redirect('contao/main.php?act=error');
                 }
@@ -328,13 +328,13 @@ class NewsPodcastsBackend extends \News
      */
     public function getItunesCategories()
     {
-        $categories = Yaml::parseFile(__DIR__.'/Resources/config/podcast_categories_list.yaml');
+        $categories = Yaml::parseFile(__DIR__ . '/Resources/config/podcast_categories_list.yaml');
 
         foreach ($categories as $k => $v) {
             $this->arrItunesCategories[$v['category']] = [];
             if (\is_array($v['subcategories'])) {
                 foreach ($v['subcategories'] as $sub) {
-                    $this->arrItunesCategories[$v['category']][$v['category'].'|'.$sub] = $sub;
+                    $this->arrItunesCategories[$v['category']][$v['category'] . '|' . $sub] = $sub;
                 }
             }
         }

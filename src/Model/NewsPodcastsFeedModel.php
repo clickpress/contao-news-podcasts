@@ -3,7 +3,7 @@
 /*
  * This file is part of NewsPodcasts.
  *
- * (c) Stefan Schulz-Lauterbach
+ * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
  * @license LGPL-3.0-or-later
  */
@@ -41,6 +41,6 @@ class NewsPodcastsFeedModel extends \Model
     {
         $t = static::$strTable;
 
-        return static::findBy(["$t.archives LIKE '%\"".(int) $intId."\"%'"], null, $arrOptions);
+        return static::findBy(["$t.archives LIKE '%\"" . (int) $intId . "\"%'"], null, $arrOptions);
     }
 }

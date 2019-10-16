@@ -51,17 +51,17 @@ class NewsPodcasts extends Frontend
             return;
         }
 
-        $objFeed->feedName = $objFeed->alias ?: 'itunes'.$objFeed->id;
+        $objFeed->feedName = $objFeed->alias ?: 'itunes' . $objFeed->id;
 
         // Delete XML file
         if ('delete' === Input::get('act')) {
             $this->import('Files');
-            $this->Files->delete($objFeed->feedName.'.xml');
+            $this->Files->delete($objFeed->feedName . '.xml');
         } // Update XML file
         else {
             $this->generateFiles($objFeed->row());
             $logger = System::getContainer()->get('monolog.logger.contao');
-            $logger->log(LogLevel::INFO, 'Generated podcast feed "'.$objFeed->feedName.'.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
         }
     }
 
@@ -79,10 +79,10 @@ class NewsPodcasts extends Frontend
 
         if (null !== $objFeed) {
             while ($objFeed->next()) {
-                $objFeed->feedName = $objFeed->alias ?: 'itunes_'.$objFeed->id;
+                $objFeed->feedName = $objFeed->alias ?: 'itunes_' . $objFeed->id;
                 self::generateFiles($objFeed->row());
                 $logger = \System::getContainer()->get('monolog.logger.contao');
-                $logger->log(LogLevel::INFO, 'Generated podcast feed "'.$objFeed->feedName.'.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
             }
         }
     }
@@ -100,12 +100,12 @@ class NewsPodcasts extends Frontend
 
         if (null !== $objFeed) {
             while ($objFeed->next()) {
-                $objFeed->feedName = $objFeed->alias ?: 'itunes'.$objFeed->id;
+                $objFeed->feedName = $objFeed->alias ?: 'itunes' . $objFeed->id;
 
                 // Update the XML file
                 $this->generateFiles($objFeed->row());
                 $logger = \System::getContainer()->get('monolog.logger.contao');
-                $logger->log(LogLevel::INFO, 'Generated podcast feed "'.$objFeed->feedName.'.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
             }
         }
     }
@@ -130,7 +130,7 @@ class NewsPodcasts extends Frontend
 
         $objFeed = new iTunesFeed($strFile);
         $objFeed->link = $strLink;
-        $objFeed->podcastUrl = $strLink.'share/'.$strFile.'.xml';
+        $objFeed->podcastUrl = $strLink . 'share/' . $strFile . '.xml';
         $objFeed->title = $arrFeed['title'];
         $objFeed->subtitle = $arrFeed['subtitle'];
         $objFeed->description = self::cleanHtml($arrFeed['description']);
@@ -146,7 +146,7 @@ class NewsPodcasts extends Frontend
         $objFile = \FilesModel::findByUuid($arrFeed['image']);
 
         if (null !== $objFile) {
-            $objFeed->imageUrl = Environment::get('base').$objFile->path;
+            $objFeed->imageUrl = Environment::get('base') . $objFile->path;
         }
 
         // Get the items
@@ -184,7 +184,7 @@ class NewsPodcasts extends Frontend
                     } else {
                         $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
                         $objUrlGenerator->generate(
-                            ($objParent->alias ?: $objParent->id).'/{items}',
+                            ($objParent->alias ?: $objParent->id) . '/{items}',
                             [
                                 'items' => 'example',
                                 '_domain' => $objParent->domain,
@@ -207,7 +207,7 @@ class NewsPodcasts extends Frontend
                 $objItem->subheadline = self::cleanHtml(
                     (null !== $objPodcasts->subheadline) ? $objPodcasts->subheadline : $objPodcasts->description
                 );
-                $objItem->link = $strLink.sprintf(
+                $objItem->link = $strLink . sprintf(
                         $strUrl,
                         (('' !== $objPodcasts->alias
                           && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
@@ -231,22 +231,22 @@ class NewsPodcasts extends Frontend
                         // Add statistics service
                         if (!empty($arrFeed['addStatistics'])) {
                             // If no trailing slash given, add one
-                            $statisticsPrefix = rtrim($arrFeed['statisticsPrefix'], '/').'/';
-                            $podcastPath = $statisticsPrefix.Environment::get('host').'/'.preg_replace(
+                            $statisticsPrefix = rtrim($arrFeed['statisticsPrefix'], '/') . '/';
+                            $podcastPath = $statisticsPrefix . Environment::get('host') . '/' . preg_replace(
                                     '(^https?://)',
                                     '',
                                     $objFile->path
                                 );
                         } else {
-                            $podcastPath = Environment::get('base').System::urlEncode($objFile->path);
+                            $podcastPath = Environment::get('base') . System::urlEncode($objFile->path);
                         }
 
                         $objItem->podcastUrl = $podcastPath;
 
                         // Prepare the duration / prefer linux tool mp3info
-                        $mp3file = new GetMp3Duration(TL_ROOT.'/'.$objFile->path);
+                        $mp3file = new GetMp3Duration(TL_ROOT . '/' . $objFile->path);
                         if (self::checkMp3InfoInstalled()) {
-                            $shell_command = 'mp3info -p "%S" '.escapeshellarg(TL_ROOT.'/'.$objFile->path);
+                            $shell_command = 'mp3info -p "%S" ' . escapeshellarg(TL_ROOT . '/' . $objFile->path);
                             $duration = shell_exec($shell_command);
                         } else {
                             $duration = $mp3file->getDuration();
@@ -269,7 +269,7 @@ class NewsPodcasts extends Frontend
         $shareDir = 'web/share/';
 
         File::putContent(
-            $shareDir.$strFile.'.xml',
+            $shareDir . $strFile . '.xml',
             self::replaceInsertTags($objFeed->$strType())
         );
     }
