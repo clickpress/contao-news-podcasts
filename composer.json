@@ -14,8 +14,7 @@
 
     "require": {
         "php": "^7.0",
-        "contao/core-bundle": "4.4.*",
-        "symfony/framework-bundle": "^3.3"
+        "contao/core-bundle": "^4.4"
     },
     "conflict": {
         "contao/core": "*",
@@ -35,7 +34,13 @@
         "clickpress/news_podcasts": "self.version"
     },
     "extra": {
-        "contao-manager-plugin": "Clickpress\\NewsPodcasts\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Clickpress\\NewsPodcasts\\ContaoManager\\Plugin",
+        "transifex": {
+            "project": "news_podcasts",
+            "prefix": "",
+            "languages_cto": "languages",
+            "languages_tx": ".tx"
+        }
     },
     "autoload": {
         "psr-4": {
