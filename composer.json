@@ -1,5 +1,5 @@
 {
-    "name": "stefansl/contao-news-podcasts",
+    "name": "clickpress/contao-news-podcasts",
     "type": "contao-bundle",
     "description": "Add audio files to your news and let Contao generate podcast compatible RSS",
     "keywords": ["contao", "extension", "podcast", "itunes", "RSS", "Podcast-Feed"],
@@ -31,7 +31,8 @@
     },
     "replace": {
         "contao-legacy/news_podcasts": "self.version",
-        "clickpress/news_podcasts": "self.version"
+        "clickpress/news_podcasts": "self.version",
+        "stefansl/news_podcasts": "self.version"
     },
     "extra": {
         "contao-manager-plugin": "Clickpress\\NewsPodcasts\\ContaoManager\\Plugin",
