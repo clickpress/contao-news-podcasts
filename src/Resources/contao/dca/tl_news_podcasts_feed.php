@@ -17,6 +17,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
         'dataContainer' => 'Table',
         'enableVersioning' => true,
         'onload_callback' => [
+            ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'checkNewsCategoriesBundle'],
             ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'checkPermission'],
             ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'generatePodcastFeed']
         ],
@@ -264,11 +265,15 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
     ],
 ];
 
-$GLOBALS['TL_DCA']['tl_news_podcasts_feed']['fields']['news_categoriesRoot'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['news_categoriesRoot'],
-    'exclude' => true,
-    'inputType' => 'newsCategoriesPicker',
-    'foreignKey' => 'tl_news_category.title',
-    'eval' => ['fieldType' => 'radio', 'tl_class' => 'clr'],
-    'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
-];
+// Inject, if NewsCategories is installed
+if(\Clickpress\NewsPodcasts\NewsPodcastsBackend::checkNewsCategoriesBundle()){
+    $GLOBALS['TL_DCA']['tl_news_podcasts_feed']['fields']['news_categoriesRoot'] = [
+        'label' => &$GLOBALS['TL_LANG']['tl_module']['news_categoriesRoot'],
+        'exclude' => true,
+        'inputType' => 'newsCategoriesPicker',
+        'foreignKey' => 'tl_news_category.title',
+        'eval' => ['fieldType' => 'radio', 'tl_class' => 'clr'],
+        'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
+    ];
+}
+

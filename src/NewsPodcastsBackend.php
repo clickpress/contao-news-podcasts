@@ -345,4 +345,11 @@ class NewsPodcastsBackend extends \News
 
         return $this->arrItunesCategories;
     }
+
+    public function checkNewsCategoriesBundle()
+    {
+        $arrBundles = System::getContainer()->getParameter('kernel.bundles');
+
+        return array_key_exists("CodefogNewsCategoriesBundle", $arrBundles);
+    }
 }
