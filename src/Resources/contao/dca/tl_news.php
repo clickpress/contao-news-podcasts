@@ -8,10 +8,10 @@
  * @license LGPL-3.0-or-later
  */
 
-/*$GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][]              = array(
+$GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][]              = array(
     'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
     'generatePodcastFeed'
-);*/
+);
 $GLOBALS['TL_DCA']['tl_news']['config']['oncut_callback'][] = [
     'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
     'schedulePodcastUpdate',
@@ -20,10 +20,10 @@ $GLOBALS['TL_DCA']['tl_news']['config']['ondelete_callback'][] = [
     'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
     'schedulePodcastUpdate',
 ];
-/*$GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'][]            = array(
+$GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'][]            = array(
     'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
     'schedulePodcastUpdate',
-);*/
+);
 $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['child_record_callback'] = [
     'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
     'listNewsPodcastArticles',

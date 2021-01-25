@@ -13,13 +13,7 @@ $GLOBALS['BE_MOD']['content']['news']['tables'][] = 'tl_news_podcasts_feed';
 /*
  * Cron jobs
  */
-// $GLOBALS['TL_CRON']['daily'][] = array( 'NewsPodcasts', 'generateFeeds' );
-
-/*
- * Register hook to add news items to the indexer
- */
-$GLOBALS['TL_HOOKS']['generateXmlFiles'][] = ['Clickpress\NewsPodcasts\NewsPodcastsBackend', 'generatePodcastFeed'];
-$GLOBALS['TL_HOOKS']['removeOldFeeds'][] = ['Clickpress\NewsPodcasts\NewsPodcastsBackend', 'preservePodcastFeeds'];
+$GLOBALS['TL_CRON']['daily'][] = ['Clickpress\NewsPodcasts\NewsPodcastsBackend', 'generatePodcastFeed'];
 
 $GLOBALS['TL_MODELS']['tl_news'] = 'Clickpress\NewsPodcasts\Model\NewsPodcastsModel';
 $GLOBALS['TL_MODELS']['tl_news_podcasts_feed'] = 'Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel';

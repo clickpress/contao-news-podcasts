@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -7,3 +10,11 @@ services:
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
                 - ["setContainer", ["@service_container"]]
+
+    clickpress_newspodcasts.listener.generatexml:
+        class: Clickpress\NewsPodcasts\EventListener\GenerateXmlFilesListener
+        tags: [ 'terminal42_service_annotation' ]
+
+    clickpress_newspodcasts.listener.removeoldfeeds:
+        class: Clickpress\NewsPodcasts\EventListener\RemoveOldFeedsListener
+        tags: [ 'terminal42_service_annotation' ]

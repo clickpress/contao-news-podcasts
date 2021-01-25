@@ -10,12 +10,14 @@
 
 namespace Clickpress\NewsPodcasts;
 
+use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Contao\Config;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Input;
 use Contao\News;
 use Contao\StringUtil;
+use Contao\System;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -37,13 +39,6 @@ class NewsPodcastsBackend extends \News
         $this->import('BackendUser', 'User');
     }
 
-    /**
-     * Check for modified news feeds and update the XML files if necessary.
-     */
-    public function generatePodcastFeed()
-    {
-        (new NewsPodcasts())->generateFeeds();
-    }
 
     /**
      * Schedule a news feed update.
@@ -63,9 +58,11 @@ class NewsPodcastsBackend extends \News
         }
 
         // Store the ID in the session
-        $session = $this->Session->get('podcast_feed_updater');
+        /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+        $objSession = System::getContainer()->get('session');
+        $session = $objSession->get('podcast_feed_updater');
         $session[] = $dc->activeRecord->pid;
-        $this->Session->set('podcast_feed_updater', array_unique($session));
+        $objSession->set('podcast_feed_updater', array_unique($session));
     }
 
     /**
@@ -217,22 +214,25 @@ class NewsPodcastsBackend extends \News
     /**
      * Check for modified itunes feeds and update the XML files if necessary.
      */
-    /*    public function generatePodcastFeed()
+    public function generatePodcastFeed()
         {
-            $session = $this->Session->get('podcasts_feed_updater');
+            /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+            $objSession = System::getContainer()->get('session');
+            $session = $objSession->get('podcasts_feed_updater');
+
+            dump($session);
 
             if (!\is_array($session) || empty($session)) {
+
                 return;
             }
 
             $feed = new NewsPodcasts();
 
-            foreach ($session as $id) {
-                $feed->generateFeeds($id);
-            }
+            NewsPodcasts::generateFeeds();
 
-            $this->Session->set('podcasts_feed_updater', null);
-        }*/
+            $objSession->set('podcasts_feed_updater', null);
+        }
 
     /**
      * Schedule a itunes feed update.
@@ -249,10 +249,13 @@ class NewsPodcastsBackend extends \News
             return;
         }
 
+        /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+        $objSession = System::getContainer()->get('session');
+
         // Store the ID in the session
-        $session = $this->Session->get('podcasts_feed_updater');
+        $session = $objSession->get('podcasts_feed_updater');
         $session[] = $dc->id;
-        $this->Session->set('podcasts_feed_updater', array_unique($session));
+        $objSession->set('podcasts_feed_updater', array_unique($session));
     }
 
     /**
@@ -286,8 +289,13 @@ class NewsPodcastsBackend extends \News
      */
     public function preservePodcastFeeds()
     {
-        // ToDo: dynamic
-        return ['podcast', 'podcast-itunes'];
+        $objFeeds = NewsPodcastsFeedModel::findAll();
+        while ($objFeeds->next())
+        {
+            $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
+        }
+
+        return $arrFeeds;
     }
 
     /**

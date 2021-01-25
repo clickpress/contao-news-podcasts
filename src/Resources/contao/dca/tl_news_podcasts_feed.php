@@ -18,7 +18,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
         'enableVersioning' => true,
         'onload_callback' => [
             ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'checkPermission'],
-            //array(  'Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'generateFeed' )
+            ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'generatePodcastFeed']
         ],
         'onsubmit_callback' => [
             ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'scheduleUpdate'],
@@ -79,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
 
     // Palettes
     'palettes' => [
-        'default' => '{title_legend},title,alias,language;{description_legend},subtitle,description,category,explicit;{author_legend},author,owner,email,image,copyright;{archives_legend},archives;{config_legend},maxItems,feedBase;{statistic_legend},addStatistics;',
+        'default' => '{title_legend},title,alias,language;{description_legend},subtitle,description,category,explicit;{author_legend},author,owner,email,image,copyright;{archives_legend},archives,news_categoriesRoot;{config_legend},maxItems,feedBase;{statistic_legend},addStatistics;',
         '__selector__' => ['addStatistics'],
     ],
 
@@ -262,4 +262,13 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
     ],
+];
+
+$GLOBALS['TL_DCA']['tl_news_podcasts_feed']['fields']['news_categoriesRoot'] = [
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['news_categoriesRoot'],
+    'exclude' => true,
+    'inputType' => 'newsCategoriesPicker',
+    'foreignKey' => 'tl_news_category.title',
+    'eval' => ['fieldType' => 'radio', 'tl_class' => 'clr'],
+    'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
 ];

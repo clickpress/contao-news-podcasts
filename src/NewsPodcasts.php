@@ -70,19 +70,16 @@ class NewsPodcasts extends Frontend
      */
     public function generateFeeds()
     {
-        //$this->import(Automator::class, 'Automator');
-        //\System::importStatic(Automator::class, 'Automator');
-        //$this->Automator->purgeXmlFiles();
-        //\Contao\Automator::purgeXmlFiles();
-
+        $logger = \System::getContainer()->get('monolog.logger.contao');
+        $logger->log(LogLevel::INFO, 'TEST', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
         $objFeed = NewsPodcastsFeedModel::findAll();
-
+#dump($objFeed);die();
         if (null !== $objFeed) {
             while ($objFeed->next()) {
                 $objFeed->feedName = $objFeed->alias ?: 'itunes_' . $objFeed->id;
                 self::generateFiles($objFeed->row());
                 $logger = \System::getContainer()->get('monolog.logger.contao');
-                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
             }
         }
     }
@@ -273,6 +270,29 @@ class NewsPodcasts extends Frontend
             self::replaceInsertTags($objFeed->$strType())
         );
     }
+
+    /**
+     * Return the names of the existing feeds so they are not removed
+     *
+     * @return array
+     */
+    public function purgeOldFeeds()
+    {
+        $arrFeeds = array();
+        $objFeeds = NewsPodcastsFeedModel::findAll();
+
+        if ($objFeeds !== null)
+        {
+            while ($objFeeds->next())
+            {
+                $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
+            }
+        }
+        dump($arrFeeds);
+
+        return $arrFeeds;
+    }
+
 
     /**
      * Check, if shell_exec and mp3info is callable.
