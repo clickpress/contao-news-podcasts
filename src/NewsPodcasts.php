@@ -7,7 +7,8 @@ declare(strict_types=1);
  *
  * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
- * @license LGPL-3.0-or-later
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Clickpress\NewsPodcasts;
@@ -73,7 +74,7 @@ class NewsPodcasts extends Frontend
         $logger = \System::getContainer()->get('monolog.logger.contao');
         $logger->log(LogLevel::INFO, 'TEST', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
         $objFeed = NewsPodcastsFeedModel::findAll();
-#dump($objFeed);die();
+        //dump($objFeed);die();
         if (null !== $objFeed) {
             while ($objFeed->next()) {
                 $objFeed->feedName = $objFeed->alias ?: 'itunes_' . $objFeed->id;
@@ -105,6 +106,26 @@ class NewsPodcasts extends Frontend
                 $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
             }
         }
+    }
+
+    /**
+     * Return the names of the existing feeds so they are not removed.
+     *
+     * @return array
+     */
+    public function purgeOldFeeds()
+    {
+        $arrFeeds = [];
+        $objFeeds = NewsPodcastsFeedModel::findAll();
+
+        if (null !== $objFeeds) {
+            while ($objFeeds->next()) {
+                $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
+            }
+        }
+        dump($arrFeeds);
+
+        return $arrFeeds;
     }
 
     /**
@@ -270,29 +291,6 @@ class NewsPodcasts extends Frontend
             self::replaceInsertTags($objFeed->$strType())
         );
     }
-
-    /**
-     * Return the names of the existing feeds so they are not removed
-     *
-     * @return array
-     */
-    public function purgeOldFeeds()
-    {
-        $arrFeeds = array();
-        $objFeeds = NewsPodcastsFeedModel::findAll();
-
-        if ($objFeeds !== null)
-        {
-            while ($objFeeds->next())
-            {
-                $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
-            }
-        }
-        dump($arrFeeds);
-
-        return $arrFeeds;
-    }
-
 
     /**
      * Check, if shell_exec and mp3info is callable.

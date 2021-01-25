@@ -5,7 +5,8 @@
  *
  * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
- * @license LGPL-3.0-or-later
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Clickpress\NewsPodcasts;
@@ -38,7 +39,6 @@ class NewsPodcastsBackend extends \News
         parent::__construct();
         $this->import('BackendUser', 'User');
     }
-
 
     /**
      * Schedule a news feed update.
@@ -215,24 +215,23 @@ class NewsPodcastsBackend extends \News
      * Check for modified itunes feeds and update the XML files if necessary.
      */
     public function generatePodcastFeed()
-        {
-            /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-            $objSession = System::getContainer()->get('session');
-            $session = $objSession->get('podcasts_feed_updater');
+    {
+        /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+        $objSession = System::getContainer()->get('session');
+        $session = $objSession->get('podcasts_feed_updater');
 
-            dump($session);
+        dump($session);
 
-            if (!\is_array($session) || empty($session)) {
-
-                return;
-            }
-
-            $feed = new NewsPodcasts();
-
-            NewsPodcasts::generateFeeds();
-
-            $objSession->set('podcasts_feed_updater', null);
+        if (!\is_array($session) || empty($session)) {
+            return;
         }
+
+        $feed = new NewsPodcasts();
+
+        NewsPodcasts::generateFeeds();
+
+        $objSession->set('podcasts_feed_updater', null);
+    }
 
     /**
      * Schedule a itunes feed update.
@@ -290,8 +289,7 @@ class NewsPodcastsBackend extends \News
     public function preservePodcastFeeds()
     {
         $objFeeds = NewsPodcastsFeedModel::findAll();
-        while ($objFeeds->next())
-        {
+        while ($objFeeds->next()) {
             $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
         }
 

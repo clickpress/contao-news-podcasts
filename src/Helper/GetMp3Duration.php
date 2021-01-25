@@ -5,7 +5,8 @@
  *
  * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
  *
- * @license LGPL-3.0-or-later
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Clickpress\NewsPodcasts\Helper;
@@ -43,7 +44,7 @@ class GetMp3Duration
         $duration = 0;
         $block = fread($fd, 100);
         $offset = $this->skipID3v2Tag($block);
-        fseek($fd, $offset, SEEK_SET);
+        fseek($fd, $offset, \SEEK_SET);
         while (!feof($fd)) {
             $block = fread($fd, 10);
             if (\strlen($block) < 10) {
@@ -55,13 +56,13 @@ class GetMp3Duration
                 if (empty($info['Framesize'])) {
                     return $duration;
                 } //some corrupt mp3 files
-                fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
+                fseek($fd, $info['Framesize'] - 10, \SEEK_CUR);
                 $duration += ($info['Samples'] / $info['Sampling Rate']);
             } else {
                 if ('TAG' === substr($block, 0, 3)) {
-                    fseek($fd, 128 - 10, SEEK_CUR); //skip over id3v1 tag size
+                    fseek($fd, 128 - 10, \SEEK_CUR); //skip over id3v1 tag size
                 } else {
-                    fseek($fd, -9, SEEK_CUR);
+                    fseek($fd, -9, \SEEK_CUR);
                 }
             }
 
