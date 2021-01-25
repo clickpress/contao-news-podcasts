@@ -74,7 +74,7 @@ class NewsPodcasts extends Frontend
         $logger = \System::getContainer()->get('monolog.logger.contao');
         $logger->log(LogLevel::INFO, 'TEST', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
         $objFeed = NewsPodcastsFeedModel::findAll();
-        //dump($objFeed);die();
+
         if (null !== $objFeed) {
             while ($objFeed->next()) {
                 $objFeed->feedName = $objFeed->alias ?: 'itunes_' . $objFeed->id;
@@ -123,7 +123,6 @@ class NewsPodcasts extends Frontend
                 $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
             }
         }
-        dump($arrFeeds);
 
         return $arrFeeds;
     }

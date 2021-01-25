@@ -220,8 +220,6 @@ class NewsPodcastsBackend extends \News
         $objSession = System::getContainer()->get('session');
         $session = $objSession->get('podcasts_feed_updater');
 
-        dump($session);
-
         if (!\is_array($session) || empty($session)) {
             return;
         }
