@@ -19,8 +19,8 @@ use Contao\Input;
 use Contao\News;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class NewsPodcastsBackend.
@@ -230,7 +230,6 @@ class NewsPodcastsBackend extends \News
         $objSession->set('podcasts_feed_updater', null);
     }
 
-
     /**
      * Return the IDs of the allowed itunes archives as array.
      *
@@ -321,9 +320,8 @@ class NewsPodcastsBackend extends \News
         return $this->arrItunesCategories;
     }
 
-
     /**
-     * Check if codefog/contao-news_categories is installed
+     * Check if codefog/contao-news_categories is installed.
      *
      * @return bool
      */
@@ -331,6 +329,6 @@ class NewsPodcastsBackend extends \News
     {
         $arrBundles = System::getContainer()->getParameter('kernel.bundles');
 
-        return array_key_exists("CodefogNewsCategoriesBundle", $arrBundles);
+        return \array_key_exists('CodefogNewsCategoriesBundle', $arrBundles);
     }
 }

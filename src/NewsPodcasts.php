@@ -266,7 +266,7 @@ class NewsPodcasts extends Frontend
                             $shell_command = 'mp3info -p "%S" ' . escapeshellarg(TL_ROOT . '/' . $objFile->path);
                             $duration = (int) shell_exec($shell_command);
 
-                            if ($duration === 0){
+                            if (0 === $duration) {
                                 $duration = $mp3file->getDuration();
                             }
                         } else {
