@@ -123,7 +123,7 @@ class GetMp3Duration
         $bitrate = isset($bitrates[$bitrate_key][$bitrate_idx]) ? $bitrates[$bitrate_key][$bitrate_idx] : 0;
 
         $sample_rate_idx = ($b2 & 0x0c) >> 2; //0xc => b1100
-        $sample_rate = isset($sample_rates[$version][$sample_rate_idx]) ? $sample_rates[$version][$sample_rate_idx] : 0;
+        $sample_rate = isset($sample_rates[$version][$sample_rate_idx]) ? $sample_rates[$version][$sample_rate_idx] : 1;
         $padding_bit = ($b2 & 0x02) >> 1;
         $private_bit = ($b2 & 0x01);
         $channel_mode_bits = ($b3 & 0xc0) >> 6;
