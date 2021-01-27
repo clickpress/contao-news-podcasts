@@ -20,6 +20,7 @@ use Contao\News;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class NewsPodcastsBackend.
@@ -38,31 +39,6 @@ class NewsPodcastsBackend extends \News
     {
         parent::__construct();
         $this->import('BackendUser', 'User');
-    }
-
-    /**
-     * Schedule a news feed update.
-     *
-     * This method is triggered when a single news item or multiple news
-     * items are modified (edit/editAll), moved (cut/cutAll) or deleted
-     * (delete/deleteAll). Since duplicated items are unpublished by default,
-     * it is not necessary to schedule updates on copyAll as well.
-     *
-     * @param DataContainer
-     */
-    public function schedulePodcastUpdate(DataContainer $dc)
-    {
-        // Return if there is no ID
-        if (!$dc->activeRecord || !$dc->activeRecord->pid || 'copy' === Input::get('act')) {
-            return;
-        }
-
-        // Store the ID in the session
-        /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-        $objSession = System::getContainer()->get('session');
-        $session = $objSession->get('podcast_feed_updater');
-        $session[] = $dc->activeRecord->pid;
-        $objSession->set('podcast_feed_updater', array_unique($session));
     }
 
     /**
@@ -212,11 +188,36 @@ class NewsPodcastsBackend extends \News
     }
 
     /**
+     * Schedule a podcast feed update.
+     *
+     * This method is triggered when a single news item or multiple news
+     * items are modified (edit/editAll), moved (cut/cutAll) or deleted
+     * (delete/deleteAll). Since duplicated items are unpublished by default,
+     * it is not necessary to schedule updates on copyAll as well.
+     *
+     * @param DataContainer
+     */
+    public function schedulePodcastUpdate(DataContainer $dc)
+    {
+        // Return if there is no ID
+        if (!$dc->activeRecord || !$dc->activeRecord->pid || 'copy' === Input::get('act')) {
+            return;
+        }
+
+        // Store the ID in the session
+        /** @var SessionInterface $objSession */
+        $objSession = System::getContainer()->get('session');
+        $session = $objSession->get('podcasts_feed_updater');
+        $session[] = $dc->activeRecord->pid;
+        $objSession->set('podcasts_feed_updater', array_unique($session));
+    }
+
+    /**
      * Check for modified itunes feeds and update the XML files if necessary.
      */
     public function generatePodcastFeed()
     {
-        /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+        /** @var SessionInterface $objSession */
         $objSession = System::getContainer()->get('session');
         $session = $objSession->get('podcasts_feed_updater');
 
@@ -224,36 +225,11 @@ class NewsPodcastsBackend extends \News
             return;
         }
 
-        $feed = new NewsPodcasts();
-
         NewsPodcasts::generateFeeds();
 
         $objSession->set('podcasts_feed_updater', null);
     }
 
-    /**
-     * Schedule a itunes feed update.
-     *
-     * This method is triggered when a single itunes archive or multiple itunes
-     * archives are modified (edit/editAll).
-     *
-     * @param \DataContainer
-     */
-    public function scheduleUpdate(\DataContainer $dc)
-    {
-        // Return if there is no ID
-        if (!$dc->id) {
-            return;
-        }
-
-        /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-        $objSession = System::getContainer()->get('session');
-
-        // Store the ID in the session
-        $session = $objSession->get('podcasts_feed_updater');
-        $session[] = $dc->id;
-        $objSession->set('podcasts_feed_updater', array_unique($session));
-    }
 
     /**
      * Return the IDs of the allowed itunes archives as array.
@@ -297,11 +273,10 @@ class NewsPodcastsBackend extends \News
     /**
      * Check the RSS-feed alias.
      *
-     * @param mixed
-     * @param \DataContainer
      * @param mixed $varValue
+     * @param \DataContainer
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return mixed
      */
@@ -319,7 +294,7 @@ class NewsPodcastsBackend extends \News
 
         // Alias exists
         if (false !== array_search($varValue, $arrFeeds, true)) {
-            throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
         }
 
         return $varValue;
@@ -346,6 +321,12 @@ class NewsPodcastsBackend extends \News
         return $this->arrItunesCategories;
     }
 
+
+    /**
+     * Check if codefog/contao-news_categories is installed
+     *
+     * @return bool
+     */
     public function checkNewsCategoriesBundle()
     {
         $arrBundles = System::getContainer()->getParameter('kernel.bundles');

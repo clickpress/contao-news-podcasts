@@ -7,25 +7,27 @@
  *
  * @license LGPL-3.0-or-later
  */
+use Clickpress\NewsPodcasts\NewsPodcastsBackend;
 
-$GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][]              = array(
-    'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
+$GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][] = [
+    NewsPodcastsBackend::class,
     'generatePodcastFeed'
-);
+];
+
 $GLOBALS['TL_DCA']['tl_news']['config']['oncut_callback'][] = [
-    'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
-    'schedulePodcastUpdate',
+    NewsPodcastsBackend::class,
+    'schedulePodcastUpdate'
 ];
 $GLOBALS['TL_DCA']['tl_news']['config']['ondelete_callback'][] = [
-    'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
-    'schedulePodcastUpdate',
+    NewsPodcastsBackend::class,
+    'schedulePodcastUpdate'
 ];
-$GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'][]            = array(
-    'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
-    'schedulePodcastUpdate',
-);
+$GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'][] = [
+    NewsPodcastsBackend::class,
+    'schedulePodcastUpdate'
+];
 $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['child_record_callback'] = [
-    'Clickpress\\NewsPodcasts\\NewsPodcastsBackend',
+    NewsPodcastsBackend::class,
     'listNewsPodcastArticles',
 ];
 $GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace(

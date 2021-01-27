@@ -11,18 +11,22 @@
 /**
  * Table tl_news_podcasts_feed.
  */
+
+use Clickpress\NewsPodcasts\NewsPodcastsBackend;
+use Contao\Environment;
+
 $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
     // Config
     'config' => [
         'dataContainer' => 'Table',
         'enableVersioning' => true,
         'onload_callback' => [
-            ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'checkNewsCategoriesBundle'],
-            ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'checkPermission'],
-            ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'generatePodcastFeed']
+            [NewsPodcastsBackend::class, 'checkNewsCategoriesBundle'],
+            [NewsPodcastsBackend::class, 'checkPermission'],
+            [NewsPodcastsBackend::class, 'generatePodcastFeed']
         ],
         'onsubmit_callback' => [
-            ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'scheduleUpdate'],
+            [NewsPodcastsBackend::class, 'schedulePodcastUpdate'],
         ],
         'sql' => [
             'keys' => [
@@ -161,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'getItunesCategories'],
+            'options_callback' => [NewsPodcastsBackend::class, 'getItunesCategories'],
             'eval' => ['chosen' => true, 'mandatory' => true],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -229,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
         ],
         'feedBase' => [
             'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase'],
-            'default' => \Contao\Environment::get('base'),
+            'default' => Environment::get('base'),
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
@@ -266,7 +270,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
 ];
 
 // Inject, if NewsCategories is installed
-if(\Clickpress\NewsPodcasts\NewsPodcastsBackend::checkNewsCategoriesBundle()){
+if(NewsPodcastsBackend::checkNewsCategoriesBundle()){
     $GLOBALS['TL_DCA']['tl_news_podcasts_feed']['fields']['news_categoriesRoot'] = [
         'label' => &$GLOBALS['TL_LANG']['tl_module']['news_categoriesRoot'],
         'exclude' => true,
