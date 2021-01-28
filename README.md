@@ -1,4 +1,4 @@
-[![Version](http://img.shields.io/packagist/v/stefansl/news_podcasts.svg?style=flat-square)](http://packagist.com/packages/stefansl/news_podcasts)  [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://raw.githubusercontent.com/stefansl/news_podcasts/master/LICENSE)
+[![Version](http://img.shields.io/packagist/v/clickpress/contao-news-podcasts.svg?style=flat-square)](http://packagist.com/packages/clickpress/contao-news-podcasts)  [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://raw.githubusercontent.com/stefansl/news_podcasts/master/LICENSE)
 
 # News Podcast for Contao
 
