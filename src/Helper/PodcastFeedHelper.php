@@ -11,14 +11,14 @@
 
 namespace Clickpress\NewsPodcasts\Helper;
 
-class iTunesFeed extends \Feed
+class PodcastFeedHelper extends \Feed
 {
     /**
-     * Generate an iTunes Podcast feed.
+     * Generate podcast feed.
      *
      * @return string
      */
-    public function generateItunes()
+    public function generatePodcastFeed()
     {
         $this->adjustPublicationDate();
 
@@ -27,10 +27,10 @@ class iTunesFeed extends \Feed
         $xml .= '<channel>';
         $xml .= '<atom:link href="' . $this->podcastUrl . '" rel="self" type="application/rss+xml" />';
         $xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
-        
+
         $xml .= '<copyright>&#xA9; ' . date('Y') . ' ' . $this->owner . '</copyright>';
         $xml .= '<itunes:author>' . $this->author . '</itunes:author>';
-        
+
         $xml .= '<itunes:subtitle>' . \StringUtil::specialchars($this->subtitle) . '</itunes:subtitle>';
         $xml .= '<itunes:summary>' . \StringUtil::specialchars($this->description) . '</itunes:summary>';
         $xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
@@ -63,16 +63,7 @@ class iTunesFeed extends \Feed
             $xml .= '<itunes:duration>' . $objItem->duration . '</itunes:duration>';
 
             // Add the GUID
-            if ($objItem->guid) {
-                // Add the isPermaLink attribute if the guid is not a link (see #4930)
-                if (0 !== strncmp($objItem->guid, 'http://', 7) && 0 !== strncmp($objItem->guid, 'https://', 8)) {
-                    $xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
-                } else {
-                    $xml .= '<guid>' . $objItem->guid . '</guid>';
-                }
-            } else {
-                $xml .= '<guid>' . \StringUtil::specialchars($objItem->link) . '</guid>';
-            }
+            $xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
 
             // Enclosures
             $xml .= '<enclosure url="' . $objItem->podcastUrl . '" length="' . $objItem->length . '" type="' . $objItem->type . '" />';

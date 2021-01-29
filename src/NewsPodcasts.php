@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Clickpress\NewsPodcasts;
 
 use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
-use Clickpress\NewsPodcasts\Helper\iTunesFeed;
+use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
+use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Environment;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Frontend;
 use Contao\Input;
@@ -52,12 +54,11 @@ class NewsPodcasts extends Frontend
             return;
         }
 
-        $objFeed->feedName = $objFeed->alias ?: 'itunes' . $objFeed->id;
+        $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
 
         // Delete XML file
         if ('delete' === Input::get('act')) {
-            $this->import('Files');
-            $this->Files->delete($objFeed->feedName . '.xml');
+            Files::delete($objFeed->feedName . '.xml');
         } // Update XML file
         else {
             $this->generateFiles($objFeed->row());
@@ -72,12 +73,12 @@ class NewsPodcasts extends Frontend
     public function generateFeeds()
     {
         $logger = \System::getContainer()->get('monolog.logger.contao');
-        $logger->log(LogLevel::INFO, 'TEST', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
+
         $objFeed = NewsPodcastsFeedModel::findAll();
 
         if (null !== $objFeed) {
             while ($objFeed->next()) {
-                $objFeed->feedName = $objFeed->alias ?: 'itunes_' . $objFeed->id;
+                $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
                 self::generateFiles($objFeed->row());
                 $logger = \System::getContainer()->get('monolog.logger.contao');
                 $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
@@ -98,8 +99,7 @@ class NewsPodcasts extends Frontend
 
         if (null !== $objFeed) {
             while ($objFeed->next()) {
-                $objFeed->feedName = $objFeed->alias ?: 'itunes' . $objFeed->id;
-
+                $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
                 // Update the XML file
                 $this->generateFiles($objFeed->row());
                 $logger = \System::getContainer()->get('monolog.logger.contao');
@@ -120,7 +120,7 @@ class NewsPodcasts extends Frontend
 
         if (null !== $objFeeds) {
             while ($objFeeds->next()) {
-                $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
+                $arrFeeds[] = $objFeeds->alias ?: 'podcast_' . $objFeeds->id;
             }
         }
 
@@ -134,19 +134,20 @@ class NewsPodcasts extends Frontend
      */
     protected function generateFiles($arrFeed)
     {
+
         $arrArchives = \StringUtil::deserialize($arrFeed['archives']);
 
         if (!\is_array($arrArchives) || empty($arrArchives)) {
             return;
         }
 
-        $strType = 'generateItunes';
+        $strType = 'generatePodcastFeed';
 
         $strLink = $arrFeed['feedBase'] ?: Environment::get('base');
         $strFile = $arrFeed['feedName'];
 
-        $objFeed = new iTunesFeed($strFile);
-        $objFeed->link = $strLink;
+        $objFeed = new PodcastFeedHelper($strFile);
+        $objFeed->link = rtrim($strLink, '/\\'); // Fix trailing slash https://github.com/clickpress/contao-news-podcasts/issues/4
         $objFeed->podcastUrl = $strLink . 'share/' . $strFile . '.xml';
         $objFeed->title = $arrFeed['title'];
         $objFeed->subtitle = $arrFeed['subtitle'];
@@ -158,6 +159,7 @@ class NewsPodcasts extends Frontend
         $objFeed->email = $arrFeed['email'];
         $objFeed->category = $arrFeed['category'];
         $objFeed->published = $arrFeed['tstamp'];
+
 
         //Add Feed Image
         $objFile = \FilesModel::findByUuid($arrFeed['image']);
@@ -178,6 +180,8 @@ class NewsPodcasts extends Frontend
                 $arrArchives
             );
         }
+        // dump(__METHOD__, $objPodcasts->getRelated('categories'));
+
 
         // Parse the items
         if (null !== $objPodcasts) {
@@ -219,6 +223,14 @@ class NewsPodcasts extends Frontend
 
                 $strUrl = $arrUrls[$jumpTo];
                 $objItem = new \FeedItem();
+
+                $objItem->id = (int) $objPodcasts->id;
+                $objItem->guid = (int) $objPodcasts->id;
+
+                $objItem->alias = $objPodcasts->alias;
+                $objItem->time = $objPodcasts->time;
+                $objItem->updated = $objPodcasts->tstamp;
+                $objItem->teaser = $objPodcasts->teaser;
 
                 $objItem->headline = self::cleanHtml($objPodcasts->headline);
                 $objItem->subheadline = self::cleanHtml(

@@ -11,6 +11,8 @@
 
 namespace Clickpress\NewsPodcasts\Model;
 
+use Clickpress\NewsPodcasts\NewsPodcastsBackend;
+
 /**
  * Reads news.
  *
@@ -52,6 +54,10 @@ class NewsPodcastsModel extends \NewsModel
         if (!BE_USER_LOGGED_IN || TL_MODE === 'BE') {
             $time = \Date::floorToMinute();
             $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+        }
+
+        if (!isset($arrOptions['newscategories']) && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
+            $arrOptions['newscategories'] = "";
         }
 
         if (!isset($arrOptions['order'])) {
