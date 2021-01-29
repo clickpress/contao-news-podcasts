@@ -200,7 +200,7 @@ class NewsPodcastsBackend extends \News
     public function schedulePodcastUpdate(DataContainer $dc)
     {
         // Return if there is no ID
-        if (!$dc->activeRecord || !$dc->activeRecord->pid || 'copy' === Input::get('act')) {
+        if (!$dc->activeRecord || !$dc->activeRecord->id || 'copy' === Input::get('act')) {
             return;
         }
 
@@ -208,7 +208,7 @@ class NewsPodcastsBackend extends \News
         /** @var SessionInterface $objSession */
         $objSession = System::getContainer()->get('session');
         $session = $objSession->get('podcasts_feed_updater');
-        $session[] = $dc->activeRecord->pid;
+        $session[] = $dc->activeRecord->id;
         $objSession->set('podcasts_feed_updater', array_unique($session));
     }
 
@@ -325,7 +325,7 @@ class NewsPodcastsBackend extends \News
      *
      * @return bool
      */
-    public function checkNewsCategoriesBundle()
+    public static function checkNewsCategoriesBundle()
     {
         $arrBundles = System::getContainer()->getParameter('kernel.bundles');
 
