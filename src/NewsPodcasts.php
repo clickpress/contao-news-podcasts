@@ -147,7 +147,7 @@ class NewsPodcasts extends Frontend
         $strFile = $arrFeed['feedName'];
 
         $objFeed = new PodcastFeedHelper($strFile);
-        $objFeed->link = $strLink;
+        $objFeed->link = rtrim($strLink, '/\\'); // Fix trailing slash https://github.com/clickpress/contao-news-podcasts/issues/4
         $objFeed->podcastUrl = $strLink . 'share/' . $strFile . '.xml';
         $objFeed->title = $arrFeed['title'];
         $objFeed->subtitle = $arrFeed['subtitle'];
