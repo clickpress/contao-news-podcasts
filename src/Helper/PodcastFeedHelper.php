@@ -63,16 +63,7 @@ class PodcastFeedHelper extends \Feed
             $xml .= '<itunes:duration>' . $objItem->duration . '</itunes:duration>';
 
             // Add the GUID
-            if ($objItem->guid) {
-                // Add the isPermaLink attribute if the guid is not a link (see #4930)
-                if (0 !== strncmp($objItem->guid, 'http://', 7) && 0 !== strncmp($objItem->guid, 'https://', 8)) {
-                    $xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
-                } else {
-                    $xml .= '<guid>' . $objItem->guid . '</guid>';
-                }
-            } else {
-                $xml .= '<guid>' . \StringUtil::specialchars($objItem->link) . '</guid>';
-            }
+            $xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
 
             // Enclosures
             $xml .= '<enclosure url="' . $objItem->podcastUrl . '" length="' . $objItem->length . '" type="' . $objItem->type . '" />';
