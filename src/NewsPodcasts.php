@@ -224,6 +224,13 @@ class NewsPodcasts extends Frontend
                 $strUrl = $arrUrls[$jumpTo];
                 $objItem = new \FeedItem();
 
+                $objItem->id = (int) $objPodcasts->id;
+                $objItem->guid = (int) $objPodcasts->id;
+
+                $objItem->alias = $objPodcasts->alias;
+                $objItem->time = $objPodcasts->time;
+                $objItem->teaser = $objPodcasts->teaser;
+
                 $objItem->headline = self::cleanHtml($objPodcasts->headline);
                 $objItem->subheadline = self::cleanHtml(
                     (null !== $objPodcasts->subheadline) ? $objPodcasts->subheadline : $objPodcasts->description
