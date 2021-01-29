@@ -9,14 +9,34 @@
  * file that was distributed with this source code.
  */
 
-/**
- * Run in a custom namespace, so the class can be replaced.
- */
-
 namespace Clickpress\NewsPodcasts\Model;
 
 /**
  * Reads podcasts feeds.
+ *
+ * @property integer $id
+ * @property integer $tstamp
+ * @property string  $title
+ * @property string  $alias
+ * @property string  $language
+ * @property string  $subtitle
+ * @property string  $summary
+ * @property string  $description
+ * @property string  $category
+ * @property string  $explicit
+ * @property string  $owner
+ * @property string  $email
+ * @property string  $author
+ * @property string  $image
+ * @property string  $archives
+ * @property integer $maxItems
+ * @property string  $feedBase
+ * @property boolean $addStatistics
+ * @property string  $statisticsPrefix
+ * @property string  $news_categoriesRoot
+ *
+ *
+ * @method static Collection|NewsPodcastsFeedModel[]|NewsPodcastsFeedModel|null findAll(array $opt=array())
  *
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
@@ -43,5 +63,15 @@ class NewsPodcastsFeedModel extends \Model
         $t = static::$strTable;
 
         return static::findBy(["$t.archives LIKE '%\"" . (int) $intId . "\"%'"], null, $arrOptions);
+    }
+
+    /**
+     * Find all feeds which include a certain news category, depends on news_categories module.
+     *
+     * @return \Model\Collection|null A collection of models or null if the news archive is not part of a feed
+     */
+    public static function findAllByNewsCategories()
+    {
+
     }
 }
