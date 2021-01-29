@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Clickpress\NewsPodcasts;
 
 use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
-use Clickpress\NewsPodcasts\Helper\iTunesFeed;
+use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
 use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
@@ -141,14 +141,14 @@ class NewsPodcasts extends Frontend
             return;
         }
 
-        $strType = 'generateItunes';
+        $strType = 'generatePodcastFeed';
 
         $strLink = $arrFeed['feedBase'] ?: Environment::get('base');
         $strFile = $arrFeed['feedName'];
 
-        $objFeed = new iTunesFeed($strFile);
+        $objFeed = new PodcastFeedHelper($strFile);
         $objFeed->link = $strLink;
-        $objFeed->podcastUrl = $strLink . 'share/' . $strFile . 'asd.xml';
+        $objFeed->podcastUrl = $strLink . 'share/' . $strFile . '.xml';
         $objFeed->title = $arrFeed['title'];
         $objFeed->subtitle = $arrFeed['subtitle'];
         $objFeed->description = self::cleanHtml($arrFeed['description']);

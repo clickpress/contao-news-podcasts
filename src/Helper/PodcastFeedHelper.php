@@ -11,14 +11,14 @@
 
 namespace Clickpress\NewsPodcasts\Helper;
 
-class iTunesFeed extends \Feed
+class PodcastFeedHelper extends \Feed
 {
     /**
-     * Generate an iTunes Podcast feed.
+     * Generate podcast feed.
      *
      * @return string
      */
-    public function generateItunes()
+    public function generatePodcastFeed()
     {
         $this->adjustPublicationDate();
 
@@ -27,10 +27,10 @@ class iTunesFeed extends \Feed
         $xml .= '<channel>';
         $xml .= '<atom:link href="' . $this->podcastUrl . '" rel="self" type="application/rss+xml" />';
         $xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
-        
+
         $xml .= '<copyright>&#xA9; ' . date('Y') . ' ' . $this->owner . '</copyright>';
         $xml .= '<itunes:author>' . $this->author . '</itunes:author>';
-        
+
         $xml .= '<itunes:subtitle>' . \StringUtil::specialchars($this->subtitle) . '</itunes:subtitle>';
         $xml .= '<itunes:summary>' . \StringUtil::specialchars($this->description) . '</itunes:summary>';
         $xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
