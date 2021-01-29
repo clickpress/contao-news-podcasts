@@ -27,15 +27,16 @@ class iTunesFeed extends \Feed
         $xml .= '<channel>';
         $xml .= '<atom:link href="' . $this->podcastUrl . '" rel="self" type="application/rss+xml" />';
         $xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
-        $xml .= '<language>' . $this->language . '</language>';
-
-        $xml .= '<copyright>&#x2117; &amp; &#xA9; ' . date('Y') . ' ' . $this->owner . '</copyright>';
-
-        $xml .= '<itunes:subtitle>' . \StringUtil::specialchars($this->subtitle) . '</itunes:subtitle>';
+        
+        $xml .= '<copyright>&#xA9; ' . date('Y') . ' ' . $this->owner . '</copyright>';
         $xml .= '<itunes:author>' . $this->author . '</itunes:author>';
+        
+        $xml .= '<itunes:subtitle>' . \StringUtil::specialchars($this->subtitle) . '</itunes:subtitle>';
         $xml .= '<itunes:summary>' . \StringUtil::specialchars($this->description) . '</itunes:summary>';
-        $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? \StringUtil::specialchars($this->explicit) : 'no') . '</itunes:explicit>';
         $xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
+
+        $xml .= '<language>' . $this->language . '</language>';
+        $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? \StringUtil::specialchars($this->explicit) : 'no') . '</itunes:explicit>';
         $xml .= '<link>' . \StringUtil::specialchars($this->link) . '</link>';
         $xml .= '<pubDate>' . date('r', $this->published) . '</pubDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
