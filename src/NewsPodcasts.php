@@ -229,6 +229,7 @@ class NewsPodcasts extends Frontend
 
                 $objItem->alias = $objPodcasts->alias;
                 $objItem->time = $objPodcasts->time;
+                $objItem->updated = $objPodcasts->tstamp;
                 $objItem->teaser = $objPodcasts->teaser;
 
                 $objItem->headline = self::cleanHtml($objPodcasts->headline);
