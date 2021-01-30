@@ -69,6 +69,7 @@ class NewsPodcasts extends Frontend
 
     /**
      * Delete old files and generate all feeds.
+     *
      * @throws Exception
      */
     public function generateFeeds(): void
@@ -118,8 +119,6 @@ class NewsPodcasts extends Frontend
 
     /**
      * Return the names of the existing feeds so they are not removed.
-     *
-     * @return array
      */
     public function purgeOldFeeds(): array
     {
@@ -167,7 +166,6 @@ class NewsPodcasts extends Frontend
         $objFeed->category = $arrFeed['category'];
         $objFeed->published = $arrFeed['tstamp'];
 
-
         //Add Feed Image
         $objFile = \FilesModel::findByUuid($arrFeed['image']);
 
@@ -187,8 +185,6 @@ class NewsPodcasts extends Frontend
                 $arrArchives
             );
         }
-        // dump(__METHOD__, $objPodcasts->getRelated('categories'));
-
 
         // Parse the items
         if (null !== $objPodcasts) {
@@ -315,8 +311,6 @@ class NewsPodcasts extends Frontend
 
     /**
      * Check, if shell_exec and mp3info is callable.
-     *
-     * @return bool
      */
     protected function checkMp3InfoInstalled(): bool
     {
@@ -331,8 +325,6 @@ class NewsPodcasts extends Frontend
 
     /**
      * @param $html
-     *
-     * @return string
      */
     protected function cleanHtml($html): string
     {

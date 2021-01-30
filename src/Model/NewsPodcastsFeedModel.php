@@ -14,32 +14,30 @@ namespace Clickpress\NewsPodcasts\Model;
 /**
  * Reads podcasts feeds.
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property string  $language
- * @property string  $subtitle
- * @property string  $summary
- * @property string  $description
- * @property string  $category
- * @property string  $explicit
- * @property string  $owner
- * @property string  $email
- * @property string  $author
- * @property string  $image
- * @property string  $archives
- * @property integer $maxItems
- * @property string  $feedBase
- * @property boolean $addStatistics
- * @property string  $statisticsPrefix
- * @property string  $news_categoriesRoot
+ * @property int $id
+ * @property int $tstamp
+ * @property string $title
+ * @property string $alias
+ * @property string $language
+ * @property string $subtitle
+ * @property string $summary
+ * @property string $description
+ * @property string $category
+ * @property string $explicit
+ * @property string $owner
+ * @property string $email
+ * @property string $author
+ * @property string $image
+ * @property string $archives
+ * @property int $maxItems
+ * @property string $feedBase
+ * @property bool $addStatistics
+ * @property string $statisticsPrefix
+ * @property string $news_categoriesRoot
  *
+ * @method static Collection|NewsPodcastsFeedModel[]|NewsPodcastsFeedModel|null findAll(array $opt = array())
  *
- * @method static Collection|NewsPodcastsFeedModel[]|NewsPodcastsFeedModel|null findAll(array $opt=array())
- *
- * @author    Leo Feyer <https://github.com/leofeyer>
- * @copyright Leo Feyer 2005-2014
+ * @author Stefan Schulz-Lauterbach
  */
 class NewsPodcastsFeedModel extends \Model
 {
@@ -72,6 +70,5 @@ class NewsPodcastsFeedModel extends \Model
      */
     public static function findAllByNewsCategories()
     {
-
     }
 }

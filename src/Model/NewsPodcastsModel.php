@@ -30,13 +30,13 @@ class NewsPodcastsModel extends \NewsModel
     /**
      * Find published news items by their parent ID.
      *
-     * @param array $arrPids     An array of news archive IDs
-     * @param bool  $blnFeatured If true, return only featured news, if false, return only unfeatured news
-     * @param int   $intLimit    An optional limit
-     * @param int   $intOffset   An optional offset
-     * @param array $arrOptions  An optional options array
+     * @param array $arrPids An array of news archive IDs
+     * @param bool $blnFeatured If true, return only featured news, if false, return only unfeatured news
+     * @param int $intLimit An optional limit
+     * @param int $intOffset An optional offset
+     * @param array $arrOptions An optional options array
      *
-     * @return \Model\Collection|\NewsModel[]|\NewsModel|null A collection of models or null if there are no news
+     * @return \Model\Collection|\NewsPodcastsModel[]|\NewsPodcastsModel|null A collection of models or null if there are no news
      */
     public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrOptions = [])
     {
@@ -57,7 +57,7 @@ class NewsPodcastsModel extends \NewsModel
         }
 
         if (!isset($arrOptions['newscategories']) && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
-            $arrOptions['newscategories'] = "";
+            $arrOptions['newscategories'] = '';
         }
 
         if (!isset($arrOptions['order'])) {
