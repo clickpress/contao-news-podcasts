@@ -41,8 +41,8 @@ class PodcastFeedHelper extends \Feed
         $xml .= '<pubDate>' . date('r', $this->published) . '</pubDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
         $xml .= '<itunes:owner>';
-        $xml .= '<itunes:name>' . $this->owner . '</itunes:name>';
-        $xml .= '<itunes:email>' . $this->email . '</itunes:email>';
+        $xml .=     '<itunes:name>' . $this->owner . '</itunes:name>';
+        $xml .=     '<itunes:email>' . $this->email . '</itunes:email>';
         $xml .= '</itunes:owner>';
 
         $xml .= '<itunes:image href="' . $this->imageUrl . '" />';
@@ -52,14 +52,13 @@ class PodcastFeedHelper extends \Feed
         foreach ($this->arrItems as $objItem) {
             $xml .= '<item>';
             $xml .= '<title>' . \StringUtil::specialchars(strip_tags($objItem->headline)) . '</title>';
-            //$xml .= '<author>' . \StringUtil::specialchars( strip_tags( $objItem->author ) ) . '&lt;' . $objFeed->email . '&gt</author>';
-            $xml .= '<itunes:author>' . \StringUtil::specialchars(strip_tags($objItem->author)) . '</itunes:author>';
-            $xml .= '<description><![CDATA[' . $objItem->description . ']]></description>';
+            $xml .= '<author>' . \StringUtil::specialchars(strip_tags($objItem->author)) . '</author>';
+            $xml .= '<itunes:subtitle><![CDATA[' . $objItem->subheadline . ']]></itunes:subtitle>';
+            $xml .= '<description><![CDATA[' . $objItem->teaser . ']]></description>';
+            $xml .= '<itunes:summary><![CDATA[' . $objItem->teaser . ']]></itunes:summary>';
             $xml .= '<link>' . \StringUtil::specialchars($objItem->link) . '</link>';
             $xml .= '<pubDate>' . date('r', $objItem->published) . '</pubDate>';
-            $xml .= '<itunes:subtitle><![CDATA[' . $objItem->headline . ']]></itunes:subtitle>';
             $xml .= (!empty($objItem->explicit)) ? '<itunes:explicit>' . \StringUtil::specialchars($objItem->explicit) . '</itunes:explicit>' : '';
-            $xml .= '<itunes:summary><![CDATA[' . $objItem->description . ']]></itunes:summary>';
             $xml .= '<itunes:duration>' . $objItem->duration . '</itunes:duration>';
 
             // Add the GUID
