@@ -17,7 +17,6 @@ use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
 use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
-use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Environment;
 use Contao\File;
@@ -29,12 +28,13 @@ use Contao\PageModel;
 use Contao\System;
 use Exception;
 use Psr\Log\LogLevel;
+use StringUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class NewsPodcasts.
  *
- * @copyright  CLICKPRESS Internetagentur 2015
+ * @copyright  CLICKPRESS Internetagentur 2021
  * @author     Stefan Schulz-Lauterbach
  */
 class NewsPodcasts extends Frontend
@@ -58,7 +58,7 @@ class NewsPodcasts extends Frontend
 
         // Delete XML file
         if ('delete' === Input::get('act')) {
-            Files::delete($objFeed->feedName . '.xml');
+            Files::getInstance()->delete($objFeed->feedName . '.xml');
         } // Update XML file
         else {
             $this->generateFiles($objFeed->row());
@@ -69,8 +69,9 @@ class NewsPodcasts extends Frontend
 
     /**
      * Delete old files and generate all feeds.
+     * @throws Exception
      */
-    public function generateFeeds()
+    public function generateFeeds(): void
     {
         $logger = \System::getContainer()->get('monolog.logger.contao');
 
@@ -79,9 +80,12 @@ class NewsPodcasts extends Frontend
         if (null !== $objFeed) {
             while ($objFeed->next()) {
                 $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
-                self::generateFiles($objFeed->row());
-                $logger = \System::getContainer()->get('monolog.logger.contao');
-                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
+                $this->generateFiles($objFeed->row());
+                $logger->log(
+                    LogLevel::INFO,
+                    'Generated podcast feed "' . $objFeed->feedName . '.xml"',
+                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]
+                );
             }
         }
     }
@@ -93,7 +97,7 @@ class NewsPodcasts extends Frontend
      *
      * @throws Exception
      */
-    public function generateFeedsByArchive($intId)
+    public function generateFeedsByArchive($intId): void
     {
         $objFeed = NewsPodcastsFeedModel::findByArchive($intId);
 
@@ -103,7 +107,11 @@ class NewsPodcasts extends Frontend
                 // Update the XML file
                 $this->generateFiles($objFeed->row());
                 $logger = \System::getContainer()->get('monolog.logger.contao');
-                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+                $logger->log(
+                    LogLevel::INFO,
+                    'Generated podcast feed "' . $objFeed->feedName . '.xml"',
+                    ['contao' => new ContaoContext(__METHOD__, TL_CRON)]
+                );
             }
         }
     }
@@ -113,7 +121,7 @@ class NewsPodcasts extends Frontend
      *
      * @return array
      */
-    public function purgeOldFeeds()
+    public function purgeOldFeeds(): array
     {
         $arrFeeds = [];
         $objFeeds = NewsPodcastsFeedModel::findAll();
@@ -132,10 +140,9 @@ class NewsPodcasts extends Frontend
      *
      * @throws Exception
      */
-    protected function generateFiles($arrFeed)
+    protected function generateFiles($arrFeed): void
     {
-
-        $arrArchives = \StringUtil::deserialize($arrFeed['archives']);
+        $arrArchives = StringUtil::deserialize($arrFeed['archives']);
 
         if (!\is_array($arrArchives) || empty($arrArchives)) {
             return;
@@ -151,7 +158,7 @@ class NewsPodcasts extends Frontend
         $objFeed->podcastUrl = $strLink . 'share/' . $strFile . '.xml';
         $objFeed->title = $arrFeed['title'];
         $objFeed->subtitle = $arrFeed['subtitle'];
-        $objFeed->description = self::cleanHtml($arrFeed['description']);
+        $objFeed->description = $this->cleanHtml($arrFeed['description']);
         $objFeed->explicit = $arrFeed['explicit'];
         $objFeed->language = $arrFeed['language'];
         $objFeed->author = $arrFeed['author'];
@@ -224,28 +231,26 @@ class NewsPodcasts extends Frontend
                 $strUrl = $arrUrls[$jumpTo];
                 $objItem = new \FeedItem();
 
-                $objItem->id = (int) $objPodcasts->id;
-                $objItem->guid = (int) $objPodcasts->id;
+                $objItem->id = (int)$objPodcasts->id;
+                $objItem->guid = (int)$objPodcasts->id;
 
                 $objItem->alias = $objPodcasts->alias;
                 $objItem->time = $objPodcasts->time;
                 $objItem->updated = $objPodcasts->tstamp;
-                $objItem->teaser = $objPodcasts->teaser;
 
-                $objItem->headline = self::cleanHtml($objPodcasts->headline);
-                $objItem->subheadline = self::cleanHtml(
-                    (null !== $objPodcasts->subheadline) ? $objPodcasts->subheadline : $objPodcasts->description
+                $objItem->headline = $this->cleanHtml($objPodcasts->headline);
+                $objItem->subheadline = $this->cleanHtml(
+                    $objPodcasts->subheadline ?? $objPodcasts->description
                 );
                 $objItem->link = $strLink . sprintf(
                         $strUrl,
-                        (('' !== $objPodcasts->alias
-                          && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
+                        (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
                     );
 
                 $objItem->published = $objPodcasts->date;
                 $objAuthor = $objPodcasts->getRelated('author');
                 $objItem->author = $objAuthor->name;
-                $objItem->description = self::cleanHtml($objPodcasts->teaser);
+                $objItem->teaser = $this->cleanHtml($objPodcasts->teaser);
 
                 $objItem->explicit = $objPodcasts->explicit;
 
@@ -273,10 +278,11 @@ class NewsPodcasts extends Frontend
                         $objItem->podcastUrl = $podcastPath;
 
                         // Prepare the duration / prefer linux tool mp3info
-                        $mp3file = new GetMp3Duration(TL_ROOT . '/' . $objFile->path);
-                        if (self::checkMp3InfoInstalled()) {
-                            $shell_command = 'mp3info -p "%S" ' . escapeshellarg(TL_ROOT . '/' . $objFile->path);
-                            $duration = (int) shell_exec($shell_command);
+                        $strRoot = System::getContainer()->getParameter('kernel.project_dir');
+                        $mp3file = new GetMp3Duration($strRoot . '/' . $objFile->path);
+                        if ($this->checkMp3InfoInstalled()) {
+                            $shell_command = 'mp3info -p "%S" ' . escapeshellarg($strRoot . '/' . $objFile->path);
+                            $duration = (int)shell_exec($shell_command);
 
                             if (0 === $duration) {
                                 $duration = $mp3file->getDuration();
@@ -285,11 +291,11 @@ class NewsPodcasts extends Frontend
                             $duration = $mp3file->getDuration();
                         }
 
-                        $objPodcastFile = new File($objFile->path, true);
+                        $objPodcastFile = new File($objFile->path);
 
                         $objItem->length = $objPodcastFile->size;
                         $objItem->type = $objPodcastFile->mime;
-                        $objItem->duration = $mp3file->formatTime($duration);
+                        $objItem->duration = GetMp3Duration::formatTime($duration);
                     }
                 }
 
@@ -312,12 +318,12 @@ class NewsPodcasts extends Frontend
      *
      * @return bool
      */
-    protected function checkMp3InfoInstalled()
+    protected function checkMp3InfoInstalled(): bool
     {
         if (\is_callable('shell_exec') && false === stripos(ini_get('disable_functions'), 'shell_exec')) {
             $check = shell_exec('type -P mp3info');
 
-            return (!empty($check)) ? true : false;
+            return !empty($check);
         }
 
         return false;
@@ -326,9 +332,9 @@ class NewsPodcasts extends Frontend
     /**
      * @param $html
      *
-     * @return string|string[]|null
+     * @return string
      */
-    protected function cleanHtml($html)
+    protected function cleanHtml($html): string
     {
         // remove P tags
         $html = preg_replace('/<p\b[^>]*>/i', '', $html);
