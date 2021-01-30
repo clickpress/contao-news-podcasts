@@ -11,14 +11,15 @@
 
 namespace Clickpress\NewsPodcasts\Helper;
 
-class PodcastFeedHelper extends \Feed
+use Feed;
+use StringUtil;
+
+class PodcastFeedHelper extends Feed
 {
     /**
      * Generate podcast feed.
-     *
-     * @return string
      */
-    public function generatePodcastFeed()
+    public function generatePodcastFeed(): string
     {
         $this->adjustPublicationDate();
 
@@ -26,20 +27,20 @@ class PodcastFeedHelper extends \Feed
         $xml .= '<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">';
         $xml .= '<channel>';
         $xml .= '<atom:link href="' . $this->podcastUrl . '" rel="self" type="application/rss+xml" />';
-        $xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
+        $xml .= '<title>' . StringUtil::specialchars($this->title) . '</title>';
 
         $xml .= '<copyright>&#xA9; ' . date('Y') . ' ' . $this->owner . '</copyright>';
         $xml .= '<itunes:author>' . $this->author . '</itunes:author>';
 
-        $xml .= '<itunes:subtitle>' . \StringUtil::specialchars($this->subtitle) . '</itunes:subtitle>';
-        $xml .= '<itunes:summary>' . \StringUtil::specialchars($this->description) . '</itunes:summary>';
-        $xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
+        $xml .= '<itunes:subtitle>' . StringUtil::specialchars($this->subtitle) . '</itunes:subtitle>';
+        $xml .= '<itunes:summary>' . StringUtil::specialchars($this->description) . '</itunes:summary>';
+        $xml .= '<description>' . StringUtil::specialchars($this->description) . '</description>';
 
         $xml .= '<language>' . $this->language . '</language>';
-        $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? \StringUtil::specialchars(
+        $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? StringUtil::specialchars(
                 $this->explicit
             ) : 'no') . '</itunes:explicit>';
-        $xml .= '<link>' . \StringUtil::specialchars($this->link) . '</link>';
+        $xml .= '<link>' . StringUtil::specialchars($this->link) . '</link>';
         $xml .= '<lastBuildDate>' . date('r', $this->published) . '</lastBuildDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
         $xml .= '<itunes:owner>';
@@ -53,14 +54,16 @@ class PodcastFeedHelper extends \Feed
 
         foreach ($this->arrItems as $objItem) {
             $xml .= '<item>';
-            $xml .= '<title>' . \StringUtil::specialchars(strip_tags($objItem->headline)) . '</title>';
-            $xml .= '<author>' . \StringUtil::specialchars(strip_tags($objItem->author)) . '</author>';
+            $xml .= '<title>' . StringUtil::specialchars(strip_tags($objItem->headline)) . '</title>';
+            $xml .= '<author>' . StringUtil::specialchars(strip_tags($objItem->author)) . '</author>';
             $xml .= '<itunes:subtitle><![CDATA[' . $objItem->subheadline . ']]></itunes:subtitle>';
             $xml .= '<description><![CDATA[' . $objItem->teaser . ']]></description>';
             $xml .= '<itunes:summary><![CDATA[' . $objItem->teaser . ']]></itunes:summary>';
-            $xml .= '<link>' . \StringUtil::specialchars($objItem->link) . '</link>';
+            $xml .= '<link>' . StringUtil::specialchars($objItem->link) . '</link>';
             $xml .= '<pubDate>' . date('r', $objItem->published) . '</pubDate>';
-            $xml .= (!empty($objItem->explicit)) ? '<itunes:explicit>' . \StringUtil::specialchars($objItem->explicit) . '</itunes:explicit>' : '';
+            $xml .= (!empty($objItem->explicit)) ? '<itunes:explicit>' . StringUtil::specialchars(
+                    $objItem->explicit
+                ) . '</itunes:explicit>' : '';
             $xml .= '<itunes:duration>' . $objItem->duration . '</itunes:duration>';
 
             // Add the GUID
@@ -80,19 +83,17 @@ class PodcastFeedHelper extends \Feed
 
     /**
      * Generate iTunes XML for categories.
-     *
-     * @return string
      */
-    protected function generateItunesCategory()
+    protected function generateItunesCategory(): string
     {
-        $category = explode('|', $this->category);
+        $arrCategory = explode('|', $this->category);
 
-        $catStr = '<itunes:category text="' . htmlentities($category[0]) . '">';
+        $strCategoryXml = '<itunes:category text="' . htmlentities($arrCategory[0]) . '">';
         if (isset($category[1])) {
-            $catStr .= '<itunes:category text="' . htmlentities($category[1]) . '" />';
+            $strCategoryXml .= '<itunes:category text="' . htmlentities($arrCategory[1]) . '" />';
         }
-        $catStr .= '</itunes:category>';
+        $strCategoryXml .= '</itunes:category>';
 
-        return $catStr;
+        return $strCategoryXml;
     }
 }
