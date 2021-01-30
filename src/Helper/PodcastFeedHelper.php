@@ -36,13 +36,15 @@ class PodcastFeedHelper extends \Feed
         $xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
 
         $xml .= '<language>' . $this->language . '</language>';
-        $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? \StringUtil::specialchars($this->explicit) : 'no') . '</itunes:explicit>';
+        $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? \StringUtil::specialchars(
+                $this->explicit
+            ) : 'no') . '</itunes:explicit>';
         $xml .= '<link>' . \StringUtil::specialchars($this->link) . '</link>';
         $xml .= '<pubDate>' . date('r', $this->published) . '</pubDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
         $xml .= '<itunes:owner>';
-        $xml .=     '<itunes:name>' . $this->owner . '</itunes:name>';
-        $xml .=     '<itunes:email>' . $this->email . '</itunes:email>';
+        $xml .= '<itunes:name>' . $this->owner . '</itunes:name>';
+        $xml .= '<itunes:email>' . $this->email . '</itunes:email>';
         $xml .= '</itunes:owner>';
 
         $xml .= '<itunes:image href="' . $this->imageUrl . '" />';
