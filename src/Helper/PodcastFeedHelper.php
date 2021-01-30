@@ -40,7 +40,7 @@ class PodcastFeedHelper extends \Feed
                 $this->explicit
             ) : 'no') . '</itunes:explicit>';
         $xml .= '<link>' . \StringUtil::specialchars($this->link) . '</link>';
-        $xml .= '<pubDate>' . date('r', $this->published) . '</pubDate>';
+        $xml .= '<lastBuildDate>' . date('r', $this->published) . '</lastBuildDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
         $xml .= '<itunes:owner>';
         $xml .= '<itunes:name>' . $this->owner . '</itunes:name>';
