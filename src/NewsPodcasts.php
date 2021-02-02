@@ -36,6 +36,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @copyright  CLICKPRESS Internetagentur 2021
  * @author     Stefan Schulz-Lauterbach
+ *
+ * @property string $podcastUrl Url to podcast file
+ * @property string $subtitle   Feed meta - subtitle
+ * @property string $explicit   Explicit Content Flagging
+ * @property string $author     Feed author
+ * @property string $owner      Feed owner
+ * @property string $email      Email address of the owner / author
+ * @property string $category   Feed category
  */
 class NewsPodcasts extends Frontend
 {
@@ -341,3 +349,5 @@ class NewsPodcasts extends Frontend
         return $strHtml;
     }
 }
+
+class_alias(NewsPodcasts::class, 'NewsPodcasts');
