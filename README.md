@@ -2,12 +2,12 @@
 
 # News Podcast for Contao
 
-Add podcast files to your news and generate iTunes compatible RSS
+Add podcast files to your news and generate podcast compatible RSS files
 
 ## Usage
 1. Configure a new podcast in "News" -> "Podcast Feeds"
 2. In your news article settings check "add podcast" and pick an audio file from your filesystem.
-3. In your /share folder you'll find your new RSS file, which can be tested and provided in iTunes.
+3. In your /share folder you'll find your new RSS file, which can be tested and provided in podcast platforms.
 
 ## Optional
 For faster calculation of duration, install mp3info [http://ibiblio.org/mp3info/] on your server and allow shell_exec.
