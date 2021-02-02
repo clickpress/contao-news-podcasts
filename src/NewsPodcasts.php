@@ -166,6 +166,9 @@ class NewsPodcasts extends Frontend
         $objFeed->category = $arrFeed['category'];
         $objFeed->published = $arrFeed['tstamp'];
 
+        $objDateTime = new \DateTime();
+        $objFeed->lastBuildDate = $objDateTime->format(\DateTime::ATOM);
+
         //Add Feed Image
         $objFile = \FilesModel::findByUuid($arrFeed['image']);
 
@@ -227,13 +230,10 @@ class NewsPodcasts extends Frontend
                 $strUrl = $arrUrls[$jumpTo];
                 $objItem = new \FeedItem();
 
-                $objItem->id = (int)$objPodcasts->id;
-                $objItem->guid = (int)$objPodcasts->id;
-
+                $objItem->id = (int) $objPodcasts->id;
+                $objItem->guid = (int) $objPodcasts->id;
                 $objItem->alias = $objPodcasts->alias;
                 $objItem->time = $objPodcasts->time;
-                $objItem->updated = $objPodcasts->tstamp;
-
                 $objItem->headline = self::cleanHtml($objPodcasts->headline);
                 $objItem->subheadline = self::cleanHtml(
                     $objPodcasts->subheadline ?? $objPodcasts->description
@@ -243,7 +243,8 @@ class NewsPodcasts extends Frontend
                         (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
                     );
 
-                $objItem->published = $objPodcasts->date;
+                $objDateTime = new \DateTime();
+                $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(\DateTime::ATOM);
                 $objAuthor = $objPodcasts->getRelated('author');
                 $objItem->author = $objAuthor->name;
                 $objItem->teaser = self::cleanHtml($objPodcasts->teaser ?? $objPodcasts->description);
@@ -278,7 +279,7 @@ class NewsPodcasts extends Frontend
                         $mp3file = new GetMp3Duration($strRoot . '/' . $objFile->path);
                         if (self::checkMp3InfoInstalled()) {
                             $shell_command = 'mp3info -p "%S" ' . escapeshellarg($strRoot . '/' . $objFile->path);
-                            $duration = (int)shell_exec($shell_command);
+                            $duration = (int) shell_exec($shell_command);
 
                             if (0 === $duration) {
                                 $duration = $mp3file->getDuration();
