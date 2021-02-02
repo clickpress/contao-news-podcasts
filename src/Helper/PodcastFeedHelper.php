@@ -41,7 +41,7 @@ class PodcastFeedHelper extends Feed
                 $this->explicit
             ) : 'no') . '</itunes:explicit>';
         $xml .= '<link>' . StringUtil::specialchars($this->link) . '</link>';
-        $xml .= '<lastBuildDate>' . date('r', $this->published) . '</lastBuildDate>';
+        $xml .= '<lastBuildDate>' . $this->lastBuildDate . '</lastBuildDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
         $xml .= '<itunes:owner>';
         $xml .= '<itunes:name>' . $this->owner . '</itunes:name>';
@@ -60,7 +60,7 @@ class PodcastFeedHelper extends Feed
             $xml .= '<description><![CDATA[' . $objItem->teaser . ']]></description>';
             $xml .= '<itunes:summary><![CDATA[' . $objItem->teaser . ']]></itunes:summary>';
             $xml .= '<link>' . StringUtil::specialchars($objItem->link) . '</link>';
-            $xml .= '<pubDate>' . date('r', $objItem->published) . '</pubDate>';
+            $xml .= '<pubDate>' . $objItem->published . '</pubDate>';
             $xml .= (!empty($objItem->explicit)) ? '<itunes:explicit>' . StringUtil::specialchars(
                     $objItem->explicit
                 ) . '</itunes:explicit>' : '';
