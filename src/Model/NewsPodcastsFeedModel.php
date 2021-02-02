@@ -14,8 +14,8 @@ namespace Clickpress\NewsPodcasts\Model;
 /**
  * Reads podcasts feeds.
  *
- * @property int $id
- * @property int $tstamp
+ * @property int    $id
+ * @property int    $tstamp
  * @property string $title
  * @property string $alias
  * @property string $language
@@ -29,9 +29,9 @@ namespace Clickpress\NewsPodcasts\Model;
  * @property string $author
  * @property string $image
  * @property string $archives
- * @property int $maxItems
+ * @property int    $maxItems
  * @property string $feedBase
- * @property bool $addStatistics
+ * @property bool   $addStatistics
  * @property string $statisticsPrefix
  * @property string $news_categoriesRoot
  *
