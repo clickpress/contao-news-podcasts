@@ -17,6 +17,8 @@ use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
 use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
+use Codefog\NewsCategoriesBundle\Criteria\NewsCriteria;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Environment;
 use Contao\File;
@@ -184,16 +186,42 @@ class NewsPodcasts extends Frontend
             $objFeed->imageUrl = Environment::get('base') . $objFile->path;
         }
 
+
+        // Add filter, if newsCategories is installed
+        $arrOptions = [];
+        if(null !== $arrFeed['news_categoriesRoot'] && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
+
+            $db = System::getContainer()->get('database_connection');
+            $arrResult = $db->executeQuery("SELECT news_id FROM tl_news_categories WHERE category_id = ?", [$arrFeed['news_categoriesRoot']])->fetchAll();
+
+            $arrNewsId = [];
+            foreach ($arrResult as $id) {
+                $arrNewsId['id'][] = $id['news_id'];
+            }
+
+            if (null != $arrNewsId) {
+                $arrColumns[] = "id IN(".\implode(',', $arrNewsId['id']).')';
+            }
+        }
+
         // Get the items
         if ($arrFeed['maxItems'] > 0) {
             $objPodcasts = NewsPodcastsModel::findPublishedByPids(
                 $arrArchives,
                 null,
-                $arrFeed['maxItems']
+                $arrFeed['maxItems'],
+                0,
+                $arrColumns,
+                $arrOptions
             );
         } else {
             $objPodcasts = NewsPodcastsModel::findPublishedByPids(
-                $arrArchives
+                $arrArchives,
+                null,
+                0,
+                0,
+                $arrColumns,
+                $arrOptions
             );
         }
 
@@ -309,7 +337,7 @@ class NewsPodcasts extends Frontend
         }
 
         // Create the file
-        // $shareDir = \Contao\System::getContainer()->getParameter('contao.web_dir') . 'share/';
+        // $shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share/';
         $shareDir = 'web/share/';
 
         File::putContent(
@@ -350,4 +378,4 @@ class NewsPodcasts extends Frontend
     }
 }
 
-class_alias(NewsPodcasts::class, 'NewsPodcasts');
+//class_alias(NewsPodcasts::class, 'Feed');

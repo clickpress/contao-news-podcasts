@@ -38,7 +38,7 @@ class NewsPodcastsModel extends \NewsModel
      *
      * @return \Model\Collection|\NewsPodcastsModel[]|\NewsPodcastsModel|null A collection of models or null if there are no news
      */
-    public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrOptions = [])
+    public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrAddColumns = [], array $arrOptions = [])
     {
         if (!\is_array($arrPids) || empty($arrPids)) {
             return null;
@@ -56,13 +56,11 @@ class NewsPodcastsModel extends \NewsModel
             $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
         }
 
-        if (!isset($arrOptions['newscategories']) && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
-            $arrOptions['newscategories'] = '';
-        }
-
         if (!isset($arrOptions['order'])) {
             $arrOptions['order'] = "$t.date DESC";
         }
+
+        $arrColumns = array_merge($arrColumns, $arrAddColumns);
 
         $arrOptions['limit'] = $intLimit;
         $arrOptions['offset'] = $intOffset;

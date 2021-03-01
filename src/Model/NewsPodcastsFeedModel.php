@@ -62,13 +62,4 @@ class NewsPodcastsFeedModel extends \Model
 
         return static::findBy(["$t.archives LIKE '%\"" . (int) $intId . "\"%'"], null, $arrOptions);
     }
-
-    /**
-     * Find all feeds which include a certain news category, depends on news_categories module.
-     *
-     * @return \Model\Collection|null A collection of models or null if the news archive is not part of a feed
-     */
-    public static function findAllByNewsCategories()
-    {
-    }
 }
