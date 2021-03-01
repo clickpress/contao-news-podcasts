@@ -199,7 +199,7 @@ class NewsPodcasts extends Frontend
                 $arrNewsId['id'][] = $id['news_id'];
             }
 
-            if (null != $arrNewsId) {
+            if (null !== $arrNewsId) {
                 $arrColumns[] = "id IN(".\implode(',', $arrNewsId['id']).')';
             }
         }
@@ -337,8 +337,8 @@ class NewsPodcasts extends Frontend
         }
 
         // Create the file
-        // $shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share/';
         $shareDir = 'web/share/';
+        // $shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share/';
 
         File::putContent(
             $shareDir . $strFile . '.xml',
