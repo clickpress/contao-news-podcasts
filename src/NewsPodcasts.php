@@ -274,7 +274,7 @@ class NewsPodcasts extends Frontend
                 );
 
                 // Add episode image
-                if (null !== $objPodcasts->singleSRC) {
+                if (null !== $objPodcasts->singleSRC && $arrFeed['useEpisodeImage']) {
                     $objItem->image = self::generateEpisodeImage($objPodcasts->singleSRC);
                 }
 

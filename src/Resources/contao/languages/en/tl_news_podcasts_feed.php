@@ -36,8 +36,11 @@ $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['email']['0'] = 'E-mail';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['email']['1'] = 'The owner\'s email address';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase']['0'] = 'Base URL';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase']['1'] = 'Please enter the base URL with protocol (e.g. http://).';
+$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image_legend'] = 'Image settings';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image']['0'] = 'Image for iTunes';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image']['1'] = 'Points to the artwork for your podcast. Cover art must be in the JPEG or PNG file formats and in the RGB color space with a minimum size of 1400 x 1400 pixels and a maximum size of 3000 x 3000 pixels.';
+$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['useEpisodeImage'][0] = 'Episode image';
+$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['useEpisodeImage'][1] = 'Activate, if you want to use your news teaser images as episode image. The image will be cropped automatically';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['news_categoriesRoot']['0'] = 'News category';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['news_categoriesRoot']['1'] = 'Choose optionally a category from the news_categories module';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['language']['0'] = 'Feed language';
@@ -62,4 +65,5 @@ $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statistic_legend'] = 'Statistics';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['addStatistics'][0] = 'Activate external statistics';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['addStatistics'][1] = 'Provide external statistic tools like blubrry.com or podtrac.com';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix'][0] = 'Media redirect url prefix';
-$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix'][1] = 'Please enter the statistics prefix url (e.g. for blubrry use http://media.blubrry.com/your_accountname)';
+$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix'][1] = 'Please enter the statistics prefix url (e.g. for blubrry use http://media.blubrry.com/your_accountname)';$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix'][0] = 'Media redirect url prefix';
+

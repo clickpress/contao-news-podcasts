@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
 
     // Palettes
     'palettes' => [
-        'default' => '{title_legend},title,alias,language;{description_legend},subtitle,description,category,explicit;{author_legend},author,owner,email,image,copyright;{archives_legend},archives,news_categoriesRoot;{config_legend},maxItems,feedBase;{statistic_legend},addStatistics;',
+        'default' => '{title_legend},title,alias,language;{description_legend},subtitle,description,category,explicit;{author_legend},author,owner,email,copyright;{image_legend},image,useEpisodeImage;{archives_legend},archives,news_categoriesRoot;{config_legend},maxItems,feedBase;{statistic_legend},addStatistics;',
         '__selector__' => ['addStatistics'],
     ],
 
@@ -209,11 +209,17 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
                 'filesOnly' => true,
                 'extensions' => 'jpg,png',
                 'mandatory' => true,
-                'tl_class' => 'long clr',
+                'tl_class' => 'w50',
             ],
             'sql' => 'blob NULL',
         ],
-
+        'useEpisodeImage' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['useEpisodeImage'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50 m12'],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
         'archives' => [
             'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['archives'],
             'exclude' => true,
