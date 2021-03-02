@@ -54,12 +54,31 @@ class NewsPodcastsFeedModel extends \Model
      * @param int   $intId      The news archive ID
      * @param array $arrOptions An optional options array
      *
-     * @return \Model\Collection|null A collection of models or null if the news archive is not part of a feed
+     * @return Collection|NewsPodcastsFeedModel[]|NewsPodcastsFeedModel|null A collection of models or null if the news archive is not part of a feed
      */
     public static function findByArchive($intId, array $arrOptions = [])
     {
         $t = static::$strTable;
 
         return static::findBy(["$t.archives LIKE '%\"" . (int) $intId . "\"%'"], null, $arrOptions);
+    }
+
+    /**
+     * Find podcast feeds by their IDs.
+     *
+     * @param array $arrIds     An array of news feed IDs
+     * @param array $arrOptions An optional options array
+     *
+     * @return Collection|NewsPodcastsFeedModel[]|NewsPodcastsFeedModel|null A collection of models or null if there are no feeds
+     */
+    public static function findByIds($arrIds, array $arrOptions = [])
+    {
+        if (empty($arrIds) || !\is_array($arrIds)) {
+            return null;
+        }
+
+        $t = static::$strTable;
+
+        return static::findBy(["$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ')'], null, $arrOptions);
     }
 }
