@@ -197,7 +197,7 @@ class NewsPodcasts extends Frontend
                 $arrNewsId['id'][] = $id['news_id'];
             }
 
-            if (null !== $arrNewsId) {
+            if (!empty($arrNewsId['id'])) {
                 $arrColumns[] = 'id IN(' . \implode(',', $arrNewsId['id']) . ')';
             }
         }
