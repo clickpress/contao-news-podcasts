@@ -41,7 +41,7 @@ class NewsPodcastsModel extends \NewsModel
     public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrAddColumns = [], array $arrOptions = [])
     {
         if (!\is_array($arrPids) || empty($arrPids)) {
-            return null;
+            return [];
         }
 
         $t = static::$strTable;

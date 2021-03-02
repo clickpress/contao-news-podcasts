@@ -60,20 +60,18 @@ class NewsPodcasts extends Frontend
     {
         $objFeed = NewsPodcastsFeedModel::findByArchive($intId);
 
-        if (null === $objFeed) {
-            return;
-        }
+        if (null !== $objFeed) {
+            $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
 
-        $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
-
-        // Delete XML file
-        if ('delete' === Input::get('act')) {
-            Files::getInstance()->delete($objFeed->feedName . '.xml');
-        } // Update XML file
-        else {
-            $this->generateFiles($objFeed->row());
-            $logger = System::getContainer()->get('monolog.logger.contao');
-            $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            // Delete XML file
+            if ('delete' === Input::get('act')) {
+                Files::getInstance()->delete($objFeed->feedName . '.xml');
+            } // Update XML file
+            else {
+                $this->generateFiles($objFeed->row());
+                $logger = System::getContainer()->get('monolog.logger.contao');
+                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            }
         }
     }
 
@@ -188,7 +186,8 @@ class NewsPodcasts extends Frontend
 
 
         // Add filter, if newsCategories is installed
-        $arrOptions = [];
+	$arrOptions = [];
+	$arrColumns = [];
         if(null !== $arrFeed['news_categoriesRoot'] && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
 
             $db = System::getContainer()->get('database_connection');
