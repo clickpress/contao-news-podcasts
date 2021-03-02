@@ -19,3 +19,6 @@ Translations are managed through Transifex. Feel free to add new: [https://www.t
 
 ## More Information
 Please follow the instruction from the official Apple website: [https://www.apple.com/itunes/podcasts/creatorfaq.html]
+
+## Credits
+Thanks to Martin Schwenzer [https://github.com/Metis77] for supporting this bundle!
