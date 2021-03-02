@@ -17,8 +17,6 @@ use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
 use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
-use Codefog\NewsCategoriesBundle\Criteria\NewsCriteria;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Environment;
 use Contao\File;
@@ -184,14 +182,12 @@ class NewsPodcasts extends Frontend
             $objFeed->imageUrl = Environment::get('base') . $objFile->path;
         }
 
-
         // Add filter, if newsCategories is installed
-	$arrOptions = [];
-	$arrColumns = [];
-        if(null !== $arrFeed['news_categoriesRoot'] && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
-
+        $arrOptions = [];
+        $arrColumns = [];
+        if (null !== $arrFeed['news_categoriesRoot'] && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
             $db = System::getContainer()->get('database_connection');
-            $arrResult = $db->executeQuery("SELECT news_id FROM tl_news_categories WHERE category_id = ?", [$arrFeed['news_categoriesRoot']])->fetchAll();
+            $arrResult = $db->executeQuery('SELECT news_id FROM tl_news_categories WHERE category_id = ?', [$arrFeed['news_categoriesRoot']])->fetchAll();
 
             $arrNewsId = [];
             foreach ($arrResult as $id) {
@@ -199,7 +195,7 @@ class NewsPodcasts extends Frontend
             }
 
             if (null !== $arrNewsId) {
-                $arrColumns[] = "id IN(".\implode(',', $arrNewsId['id']).')';
+                $arrColumns[] = 'id IN(' . \implode(',', $arrNewsId['id']) . ')';
             }
         }
 

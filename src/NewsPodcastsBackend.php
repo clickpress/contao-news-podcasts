@@ -263,11 +263,11 @@ class NewsPodcastsBackend extends \News
     {
         $objFeeds = NewsPodcastsFeedModel::findAll();
 
-	if (null === $objFeeds)  {
-		return [];
-	}
+        if (null === $objFeeds) {
+            return [];
+        }
 
-	while ($objFeeds->next()) {
+        while ($objFeeds->next()) {
             $arrFeeds[] = $objFeeds->alias ?: 'news' . $objFeeds->id;
         }
 

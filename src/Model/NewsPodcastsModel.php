@@ -11,8 +11,6 @@
 
 namespace Clickpress\NewsPodcasts\Model;
 
-use Clickpress\NewsPodcasts\NewsPodcastsBackend;
-
 /**
  * Reads news.
  *
