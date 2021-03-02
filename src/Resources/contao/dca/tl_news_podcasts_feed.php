@@ -272,7 +272,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
 // Inject, if NewsCategories is installed
 if(NewsPodcastsBackend::checkNewsCategoriesBundle()){
     $GLOBALS['TL_DCA']['tl_news_podcasts_feed']['fields']['news_categoriesRoot'] = [
-        'label' => &$GLOBALS['TL_LANG']['tl_module']['news_categoriesRoot'],
         'exclude' => true,
         'inputType' => 'newsCategoriesPicker',
         'foreignKey' => 'tl_news_category.title',
