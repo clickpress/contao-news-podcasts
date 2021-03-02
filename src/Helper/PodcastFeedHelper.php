@@ -59,6 +59,7 @@ class PodcastFeedHelper extends Feed
             $xml .= '<itunes:subtitle><![CDATA[' . $objItem->subheadline . ']]></itunes:subtitle>';
             $xml .= '<description><![CDATA[' . $objItem->teaser . ']]></description>';
             $xml .= '<itunes:summary><![CDATA[' . $objItem->teaser . ']]></itunes:summary>';
+            $xml .= (!empty($objItem->image)) ? '<itunes:image href="' . $objItem->image . '" />' : '';
             $xml .= '<link>' . StringUtil::specialchars($objItem->link) . '</link>';
             $xml .= '<pubDate>' . $objItem->published . '</pubDate>';
             $xml .= (!empty($objItem->explicit)) ? '<itunes:explicit>' . StringUtil::specialchars(

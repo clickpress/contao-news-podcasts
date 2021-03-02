@@ -23,6 +23,7 @@ use Contao\File;
 use Contao\Files;
 use Contao\FilesModel;
 use Contao\Frontend;
+use Contao\Image\ResizeConfiguration;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
@@ -159,6 +160,8 @@ class NewsPodcasts extends Frontend
         $strFile = $arrFeed['feedName'];
 
         $objFeed = new PodcastFeedHelper($strFile);
+
+        // Podcasts meta
         $objFeed->link = rtrim($strLink, '/\\'); // Fix trailing slash https://github.com/clickpress/contao-news-podcasts/issues/4
         $objFeed->podcastUrl = $strLink . 'share/' . $strFile . '.xml';
         $objFeed->title = $arrFeed['title'];
@@ -220,7 +223,7 @@ class NewsPodcasts extends Frontend
             );
         }
 
-        // Parse the items
+        // Podcast items
         if (null !== $objPodcasts) {
             $arrUrls = [];
 
@@ -269,6 +272,12 @@ class NewsPodcasts extends Frontend
                 $objItem->subheadline = self::cleanHtml(
                     $objPodcasts->subheadline ?? $objPodcasts->description
                 );
+
+                // Add episode image
+                if (null !== $objPodcasts->singleSRC) {
+                    $objItem->image = self::generateEpisodeImage($objPodcasts->singleSRC);
+                }
+
                 $objItem->link = $strLink . sprintf(
                         $strUrl,
                         (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
@@ -371,6 +380,29 @@ class NewsPodcasts extends Frontend
 
         return $strHtml;
     }
-}
 
-//class_alias(NewsPodcasts::class, 'Feed');
+    /**
+     * Generate episode image.
+     *
+     * @param $singleSrc
+     */
+    protected static function generateEpisodeImage($singleSrc): string
+    {
+        $objFile = FilesModel::findByUuid($singleSrc);
+        $container = System::getContainer();
+        $rootDir = $container->getParameter('kernel.project_dir');
+        $episodeImg = $container
+            ->get('contao.image.image_factory')
+            ->create(
+                $rootDir . '/' . $objFile->path,
+                (new ResizeConfiguration())
+                    ->setWidth(1400)
+                    ->setHeight(1400)
+                    ->setMode(ResizeConfiguration::MODE_CROP)
+                    ->setZoomLevel(50)
+                )
+            ->getUrl($rootDir);
+
+        return Environment::get('url') . '/' . $episodeImg;
+    }
+}
