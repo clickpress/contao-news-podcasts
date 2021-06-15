@@ -176,7 +176,7 @@ class NewsPodcasts extends Frontend
         $objFeed->published = $arrFeed['tstamp'];
 
         $objDateTime = new \DateTime();
-        $objFeed->lastBuildDate = $objDateTime->format(\DateTime::ATOM);
+        $objFeed->lastBuildDate = $objDateTime->format(\DateTime::RFC2822);
 
         //Add Feed Image
         $objFile = \FilesModel::findByUuid($arrFeed['image']);
@@ -284,7 +284,7 @@ class NewsPodcasts extends Frontend
                     );
 
                 $objDateTime = new \DateTime();
-                $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(\DateTime::ATOM);
+                $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(\DateTime::RFC2822);
                 $objAuthor = $objPodcasts->getRelated('author');
                 $objItem->author = $objAuthor->name;
                 $objItem->teaser = self::cleanHtml($objPodcasts->teaser ?? $objPodcasts->description);
