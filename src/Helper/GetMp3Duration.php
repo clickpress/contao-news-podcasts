@@ -11,16 +11,20 @@
 
 namespace Clickpress\NewsPodcasts\Helper;
 
+use function ord;
+use function strlen;
+use const SEEK_CUR;
+
 class GetMp3Duration
 {
-    protected $filename;
+    protected string $filename;
 
     public function __construct($filename)
     {
         $this->filename = $filename;
     }
 
-    public static function formatTime($duration) //as hh:mm:ss
+    public static function formatTime($duration): string
     {
         //return sprintf("%d:%02d", $duration/60, $duration%60);
         $hours = floor($duration / 3600);
@@ -31,38 +35,38 @@ class GetMp3Duration
     }
 
     //Read first mp3 frame only...  use for CBR constant bit rate MP3s
-    public function getDurationEstimate()
+    public function getDurationEstimate(): float|int
     {
-        return $this->getDuration($use_cbr_estimate = true);
+        return $this->getDuration(true);
     }
 
     //Read entire file, frame by frame... ie: Variable Bit Rate (VBR)
-    public function getDuration($use_cbr_estimate = false)
+    public function getDuration($use_cbr_estimate = false): float|int
     {
-        $fd = fopen($this->filename, 'r');
+        $fd = fopen($this->filename, 'rb');
 
         $duration = 0;
         $block = fread($fd, 100);
         $offset = $this->skipID3v2Tag($block);
-        fseek($fd, $offset, \SEEK_SET);
+        fseek($fd, $offset);
         while (!feof($fd)) {
             $block = fread($fd, 10);
-            if (\strlen($block) < 10) {
+            if (strlen($block) < 10) {
                 break;
             } //looking for 1111 1111 111 (frame synchronization bits)
 
-            if ("\xff" === $block[0] && (\ord($block[1]) & 0xe0)) {
+            if ("\xff" === $block[0] && (ord($block[1]) & 0xe0)) {
                 $info = self::parseFrameHeader(substr($block, 0, 4));
                 if (empty($info['Framesize'])) {
                     return $duration;
                 } //some corrupt mp3 files
-                fseek($fd, $info['Framesize'] - 10, \SEEK_CUR);
+                fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
                 $duration += ($info['Samples'] / $info['Sampling Rate']);
             } else {
-                if ('TAG' === substr($block, 0, 3)) {
-                    fseek($fd, 128 - 10, \SEEK_CUR); //skip over id3v1 tag size
+                if (str_starts_with($block, 'TAG')) {
+                    fseek($fd, 128 - 10, SEEK_CUR); //skip over id3v1 tag size
                 } else {
-                    fseek($fd, -9, \SEEK_CUR);
+                    fseek($fd, -9, SEEK_CUR);
                 }
             }
 
@@ -106,9 +110,9 @@ class GetMp3Duration
             2 => [1 => 384, 2 => 1152, 3 => 576], //MPEGv2/2.5, Layers 1,2,3
         ];
         //$b0=ord($fourbytes[0]);//will always be 0xff
-        $b1 = \ord($fourbytes[1]);
-        $b2 = \ord($fourbytes[2]);
-        $b3 = \ord($fourbytes[3]);
+        $b1 = ord($fourbytes[1]);
+        $b2 = ord($fourbytes[2]);
+        $b3 = ord($fourbytes[3]);
 
         $version_bits = ($b1 & 0x18) >> 3;
         $version = $versions[$version_bits];
@@ -154,17 +158,17 @@ class GetMp3Duration
     private function skipID3v2Tag(&$block)
     {
         if ('ID3' === substr($block, 0, 3)) {
-            $id3v2_major_version = \ord($block[3]);
-            $id3v2_minor_version = \ord($block[4]);
-            $id3v2_flags = \ord($block[5]);
+            $id3v2_major_version = ord($block[3]);
+            $id3v2_minor_version = ord($block[4]);
+            $id3v2_flags = ord($block[5]);
             $flag_unsynchronisation = $id3v2_flags & 0x80 ? 1 : 0;
             $flag_extended_header = $id3v2_flags & 0x40 ? 1 : 0;
             $flag_experimental_ind = $id3v2_flags & 0x20 ? 1 : 0;
             $flag_footer_present = $id3v2_flags & 0x10 ? 1 : 0;
-            $z0 = \ord($block[6]);
-            $z1 = \ord($block[7]);
-            $z2 = \ord($block[8]);
-            $z3 = \ord($block[9]);
+            $z0 = ord($block[6]);
+            $z1 = ord($block[7]);
+            $z2 = ord($block[8]);
+            $z3 = ord($block[9]);
             if ((0 === ($z0 & 0x80)) && (0 === ($z1 & 0x80)) && (0 === ($z2 & 0x80)) && (0 === ($z3 & 0x80))) {
                 $header_size = 10;
                 $tag_size = (($z0 & 0x7f) * 2097152) + (($z1 & 0x7f) * 16384) + (($z2 & 0x7f) * 128) + ($z3 & 0x7f);
