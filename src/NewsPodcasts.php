@@ -27,6 +27,7 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
+use DateTimeInterface;
 use Exception;
 use Psr\Log\LogLevel;
 use StringUtil;
@@ -67,9 +68,13 @@ class NewsPodcasts extends Frontend
                 Files::getInstance()->delete($objFeed->feedName . '.xml');
             } // Update XML file
             else {
-                $this->generateFiles($objFeed->row());
+                self::generateFiles($objFeed->row());
                 $logger = System::getContainer()->get('monolog.logger.contao');
-                $logger->log(LogLevel::INFO, 'Generated podcast feed "' . $objFeed->feedName . '.xml"', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+                $logger?->log(
+                    LogLevel::INFO,
+                    'Generated podcast feed "' . $objFeed->feedName . '.xml"',
+                    ['contao' => new ContaoContext(__METHOD__, TL_CRON)]
+                );
             }
         }
     }
@@ -79,7 +84,7 @@ class NewsPodcasts extends Frontend
      *
      * @throws Exception
      */
-    public function generateFeeds(): void
+    public static function generateFeeds(): void
     {
         $logger = \System::getContainer()->get('monolog.logger.contao');
 
@@ -89,7 +94,7 @@ class NewsPodcasts extends Frontend
             while ($objFeed->next()) {
                 $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
                 self::generateFiles($objFeed->row());
-                $logger->log(
+                $logger?->log(
                     LogLevel::INFO,
                     'Generated podcast feed "' . $objFeed->feedName . '.xml"',
                     ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]
@@ -176,7 +181,7 @@ class NewsPodcasts extends Frontend
         $objFeed->published = $arrFeed['tstamp'];
 
         $objDateTime = new \DateTime();
-        $objFeed->lastBuildDate = $objDateTime->format(\DateTime::RFC2822);
+        $objFeed->lastBuildDate = $objDateTime->format(DateTimeInterface::RFC2822);
 
         //Add Feed Image
         $objFile = \FilesModel::findByUuid($arrFeed['image']);
@@ -188,9 +193,11 @@ class NewsPodcasts extends Frontend
         // Add filter, if newsCategories is installed
         $arrOptions = [];
         $arrColumns = [];
-        if (null !== $arrFeed['news_categoriesRoot'] && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
+        $newscategoriesRoot = $arrFeed['news_categoriesRoot'] ?? null;
+
+        if (null !== $newscategoriesRoot && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
             $db = System::getContainer()->get('database_connection');
-            $arrResult = $db->executeQuery('SELECT news_id FROM tl_news_categories WHERE category_id = ?', [$arrFeed['news_categoriesRoot']])->fetchAll();
+            $arrResult = $db?->executeQuery('SELECT news_id FROM tl_news_categories WHERE category_id = ?', [$arrFeed['news_categoriesRoot']])->fetchAllAssociative();
 
             $arrNewsId = [];
             foreach ($arrResult as $id) {
@@ -244,7 +251,7 @@ class NewsPodcasts extends Frontend
                         $arrUrls[$jumpTo] = false;
                     } else {
                         $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-                        $objUrlGenerator->generate(
+                        $objUrlGenerator?->generate(
                             ($objParent->alias ?: $objParent->id) . '/{items}',
                             [
                                 'items' => 'example',
@@ -257,7 +264,7 @@ class NewsPodcasts extends Frontend
                 }
 
                 // Skip the event if it requires a jumpTo URL but there is none
-                if (false === $arrUrls[$jumpTo] && 'default' === $objPodcasts->source) {
+                if (null === ($arrUrls[$jumpTo] ?? null) && 'default' === $objPodcasts->source) {
                     continue;
                 }
 
@@ -284,7 +291,7 @@ class NewsPodcasts extends Frontend
                     );
 
                 $objDateTime = new \DateTime();
-                $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(\DateTime::RFC2822);
+                $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(DateTimeInterface::RFC2822);
                 $objAuthor = $objPodcasts->getRelated('author');
                 $objItem->author = $objAuthor->name;
                 $objItem->teaser = self::cleanHtml($objPodcasts->teaser ?? $objPodcasts->description);
@@ -341,12 +348,14 @@ class NewsPodcasts extends Frontend
         }
 
         // Create the file
-        $shareDir = 'web/share/';
-        // $shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share/';
+        $container = System::getContainer();
+        $shareDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir')) . '/share/';
+        $parser = $container->get('contao.insert_tag.parser');
 
         File::putContent(
             $shareDir . $strFile . '.xml',
-            self::replaceInsertTags($objFeed->$strType())
+            // replace insert tags
+            $parser?->replace((string) $objFeed->$strType())
         );
     }
 
@@ -366,8 +375,6 @@ class NewsPodcasts extends Frontend
 
     /**
      * Remove unwanted HTML tags.
-     *
-     * @param $strHtml
      */
     protected static function cleanHtml($strHtml): string
     {
@@ -376,15 +383,11 @@ class NewsPodcasts extends Frontend
         $strHtml = preg_replace('/<\/p>/i', '', $strHtml);
 
         // remove linebreaks
-        $strHtml = preg_replace('/[\n\r]+/i', '', $strHtml);
-
-        return $strHtml;
+        return preg_replace('/[\n\r]+/i', '', $strHtml);
     }
 
     /**
      * Generate episode image.
-     *
-     * @param $singleSrc
      */
     protected static function generateEpisodeImage($singleSrc): string
     {
@@ -393,7 +396,7 @@ class NewsPodcasts extends Frontend
         $rootDir = $container->getParameter('kernel.project_dir');
         $episodeImg = $container
             ->get('contao.image.image_factory')
-            ->create(
+            ?->create(
                 $rootDir . '/' . $objFile->path,
                 (new ResizeConfiguration())
                     ->setWidth(1400)

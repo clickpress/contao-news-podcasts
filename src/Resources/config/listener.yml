@@ -2,7 +2,14 @@ services:
     clickpress_newspodcasts.listener.generate_page:
         class: Clickpress\NewsPodcasts\EventListener\GeneratePageListener
         arguments:
-        - '@contao.framework'
+            - '@contao.framework'
         tags:
-        - { name: contao.hook, hook: generatePage }
+            - { name: contao.hook, hook: generatePage }
+        public: true
+    clickpress_newspodcasts.listener.news_list_fetch_items:
+        class: Clickpress\NewsPodcasts\EventListener\NewsListFetchItemsListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: newsListFetchItems }
         public: true

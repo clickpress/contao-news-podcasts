@@ -13,24 +13,26 @@ namespace Clickpress\NewsPodcasts;
 
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Contao\Config;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Input;
 use Contao\News;
 use Contao\StringUtil;
 use Contao\System;
+use Exception;
+use NewsArchiveModel;
+use Psr\Log\LogLevel;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class NewsPodcastsBackend.
  */
-class NewsPodcastsBackend extends \News
+class NewsPodcastsBackend extends News
 {
-    /**
-     * @var
-     */
-    private $arrItunesCategories;
+    private array $arrItunesCategories;
 
     /**
      * Import the back end user object.
@@ -48,13 +50,13 @@ class NewsPodcastsBackend extends \News
      *
      * @return string
      */
-    public function listNewsPodcastArticles($arrRow)
+    public function listNewsPodcastArticles(array $arrRow): string
     {
         $strHtml = $arrRow['headline'] .
                    ' <img src="bundles/newspodcasts/icon_mic.svg" width="16" height="16" alt="Podcast">';
         $arrRow['headline'] = ('1' === $arrRow['addPodcast']) ? $strHtml : $arrRow['headline'];
 
-        return self::listNewsArticles($arrRow);
+        return $this->listNewsArticles($arrRow);
     }
 
     /**
@@ -64,28 +66,26 @@ class NewsPodcastsBackend extends \News
      *
      * @return string
      */
-    public function listNewsArticles($arrRow)
+    public function listNewsArticles(array $arrRow): string
     {
         $date = Date::parse(Config::get('datimFormat'), $arrRow['date']);
 
-        $html = '<div class="tl_content_left">'
+        return '<div class="tl_content_left">'
                 . $arrRow['headline']
                 . ' <span style="color:#999;padding-left:3px">[' . $date . ']</span></div>';
-
-        return $html;
     }
 
     /**
      * Check permissions to edit table tl_itunes_archive.
      */
-    public function checkPermission()
+    public function checkPermission(): void
     {
         if ($this->User->isAdmin) {
             return;
         }
 
         // Set the root IDs
-        if (!\is_array($this->User->newspodcastsfeeds) || empty($this->User->newspodcastsfeeds)) {
+        if (!is_array($this->User->newspodcastsfeeds) || empty($this->User->newspodcastsfeeds)) {
             $root = [0];
         } else {
             $root = $this->User->newspodcastsfeeds;
@@ -98,6 +98,9 @@ class NewsPodcastsBackend extends \News
             $GLOBALS['TL_DCA']['tl_news_podcasts_feed']['config']['closed'] = true;
         }
 
+        $container = System::getContainer();
+        $logger = $container->get('monolog.logger.contao');
+
         // Check current action
         switch (Input::get('act')) {
             case 'create':
@@ -107,10 +110,10 @@ class NewsPodcastsBackend extends \News
 
             case 'edit':
                 // Dynamically add the record to the user profile
-                if (!\in_array(Input::get('id'), $root, true)) {
+                if (!in_array(Input::get('id'), $root, true)) {
                     $arrNew = $this->Session->get('new_records');
 
-                    if (\is_array($arrNew['tl_news_podcasts_feed']) && \in_array(Input::get('id'),
+                    if (is_array($arrNew['tl_news_podcasts_feed']) && in_array(Input::get('id'),
                                                                                   $arrNew['tl_news_podcasts_feed'], true)
                     ) {
                         // Add permissions on user level
@@ -121,7 +124,7 @@ class NewsPodcastsBackend extends \News
 
                             $arrnewspodcastsfeedp = StringUtil::deserialize($objUser->newspodcastsfeedp);
 
-                            if (\is_array($arrnewspodcastsfeedp) && \in_array('create', $arrnewspodcastsfeedp, true)) {
+                            if (is_array($arrnewspodcastsfeedp) && in_array('create', $arrnewspodcastsfeedp, true)) {
                                 $arrnewspodcastsfeeds = StringUtil::deserialize($objUser->newspodcastsfeeds);
                                 $arrnewspodcastsfeeds[] = Input::get('id');
 
@@ -136,7 +139,7 @@ class NewsPodcastsBackend extends \News
 
                             $arrnewspodcastsfeedp = StringUtil::deserialize($objGroup->newspodcastsfeedp);
 
-                            if (\is_array($arrnewspodcastsfeedp) && \in_array('create', $arrnewspodcastsfeedp, true)) {
+                            if (is_array($arrnewspodcastsfeedp) && in_array('create', $arrnewspodcastsfeedp, true)) {
                                 $arrnewspodcastsfeeds = StringUtil::deserialize($objGroup->newspodcastsfeeds);
                                 $arrnewspodcastsfeeds[] = Input::get('id');
 
@@ -150,38 +153,48 @@ class NewsPodcastsBackend extends \News
                         $this->User->newspodcastsfeeds = $root;
                     }
                 }
+                break;
             // no break;
 
             case 'copy':
             case 'delete':
             case 'show':
-                if (!\in_array(Input::get('id'),
+                if (!in_array(Input::get('id'),
                                $root, true) || ('delete' === Input::get('act') && !$this->User->hasAccess('delete',
                                                                                                        'newspodcastsfeedp'))
                 ) {
-                    $this->log('Not enough permissions to ' . Input::get('act') . ' podcast feed ID "' . Input::get('id') . '"',
-                                __METHOD__, TL_ERROR);
-                    $this->redirect('contao/main.php?act=error');
+
+                    $logger?->log(
+                        LogLevel::ERROR,
+                        'Not enough permissions to ' . Input::get('act') . ' podcast feed ID "' . Input::get('id') . '"',
+                        ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]
+                    );
+                    self::redirect('contao/main.php?act=error');
                 }
                 break;
 
             case 'editAll':
             case 'deleteAll':
             case 'overrideAll':
-                $session = $this->Session->getData();
+                $objSession = $container->get('request_stack')->getSession();
+                $session = $objSession->all();
                 if ('deleteAll' === Input::get('act') && !$this->User->hasAccess('delete', 'newspodcastsfeedp')) {
                     $session['CURRENT']['IDS'] = [];
                 } else {
-                    $session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
+                    $session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
                 }
-                $this->Session->setData($session);
+                $objSession->replace($session);
                 break;
 
             default:
-                if (\strlen(Input::get('act'))) {
-                    $this->log('Not enough permissions to ' . Input::get('act') . ' podcast feeds', __METHOD__,
-                                TL_ERROR);
-                    $this->redirect('contao/main.php?act=error');
+                if ('' !== Input::get('act')) {
+                    $logger?->log(
+                        LogLevel::ERROR,
+                        'Not enough permissions to ' . Input::get('act') . ' podcast feeds',
+                        ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]
+                    );
+
+                    self::redirect('contao/main.php?act=error');
                 }
                 break;
         }
@@ -197,7 +210,7 @@ class NewsPodcastsBackend extends \News
      *
      * @param DataContainer
      */
-    public function schedulePodcastUpdate(DataContainer $dc)
+    public function schedulePodcastUpdate(DataContainer $dc): void
     {
         // Return if there is no ID
         if (!$dc->activeRecord || !$dc->activeRecord->id || 'copy' === Input::get('act')) {
@@ -215,13 +228,13 @@ class NewsPodcastsBackend extends \News
     /**
      * Check for modified itunes feeds and update the XML files if necessary.
      */
-    public function generatePodcastFeed()
+    public function generatePodcastFeed(): void
     {
         /** @var SessionInterface $objSession */
         $objSession = System::getContainer()->get('session');
         $session = $objSession->get('podcasts_feed_updater');
 
-        if (!\is_array($session) || empty($session)) {
+        if (!is_array($session) || empty($session)) {
             return;
         }
 
@@ -235,12 +248,12 @@ class NewsPodcastsBackend extends \News
      *
      * @return array
      */
-    public function getAllowedArchives()
+    public function getAllowedArchives(): array
     {
         if ($this->User->isAdmin) {
-            $objArchive = \NewsArchiveModel::findAll();
+            $objArchive = NewsArchiveModel::findAll();
         } else {
-            $objArchive = \NewsArchiveModel::findMultipleByIds($this->User->news);
+            $objArchive = NewsArchiveModel::findMultipleByIds($this->User->news);
         }
 
         $return = [];
@@ -259,7 +272,7 @@ class NewsPodcastsBackend extends \News
      *
      * @return array
      */
-    public function preservePodcastFeeds()
+    public static function preservePodcastFeeds(): array
     {
         $objFeeds = NewsPodcastsFeedModel::findAll();
 
@@ -276,29 +289,22 @@ class NewsPodcastsBackend extends \News
 
     /**
      * Check the RSS-feed alias.
-     *
-     * @param mixed $varValue
-     * @param \DataContainer
-     *
-     * @throws Exception
-     *
-     * @return mixed
      */
-    public function checkFeedAlias($varValue, \DataContainer $dc)
+    public function checkFeedAlias(string $varValue, DataContainer $dc): mixed
     {
         // No change or empty value
         if ($varValue === $dc->value || '' === $varValue) {
             return $varValue;
         }
 
-        $varValue = standardize($varValue); // see #5096
+        $varValue = StringUtil::standardize($varValue); // see #5096
 
         $this->import('Automator');
         $arrFeeds = $this->Automator->purgeXmlFiles(true);
 
         // Alias exists
-        if (false !== array_search($varValue, $arrFeeds, true)) {
-            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+        if (in_array($varValue, $arrFeeds, true)) {
+            throw new RuntimeException(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
         }
 
         return $varValue;
@@ -309,13 +315,13 @@ class NewsPodcastsBackend extends \News
      *
      * @return array
      */
-    public function getItunesCategories()
+    public function getItunesCategories(): array
     {
         $categories = Yaml::parseFile(__DIR__ . '/Resources/config/podcast_categories_list.yaml');
 
-        foreach ($categories as $k => $v) {
+        foreach ($categories as $v) {
             $this->arrItunesCategories[$v['category']] = [];
-            if (\is_array($v['subcategories'])) {
+            if (is_array($v['subcategories'])) {
                 foreach ($v['subcategories'] as $sub) {
                     $this->arrItunesCategories[$v['category']][$v['category'] . '|' . $sub] = $sub;
                 }
@@ -330,10 +336,10 @@ class NewsPodcastsBackend extends \News
      *
      * @return bool
      */
-    public static function checkNewsCategoriesBundle()
+    public static function checkNewsCategoriesBundle(): bool
     {
         $arrBundles = System::getContainer()->getParameter('kernel.bundles');
 
-        return \array_key_exists('CodefogNewsCategoriesBundle', $arrBundles);
+        return array_key_exists('CodefogNewsCategoriesBundle', $arrBundles);
     }
 }

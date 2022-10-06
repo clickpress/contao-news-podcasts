@@ -71,7 +71,7 @@ class NewsPodcastsFeedModel extends \Model
      *
      * @return Collection|NewsPodcastsFeedModel[]|NewsPodcastsFeedModel|null A collection of models or null if there are no feeds
      */
-    public static function findByIds($arrIds, array $arrOptions = [])
+    public static function findByIds(array $arrIds, array $arrOptions = [])
     {
         if (empty($arrIds) || !\is_array($arrIds)) {
             return null;
@@ -81,4 +81,6 @@ class NewsPodcastsFeedModel extends \Model
 
         return static::findBy(["$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ')'], null, $arrOptions);
     }
+
+
 }

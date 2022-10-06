@@ -1,5 +1,5 @@
 
-<div class="layout_full block<?= $this->class ?>" itemscope itemtype="http://schema.org/Article">
+<div class="layout_full block<?= $this->class ?>" itemscope itemtype="https://schema.org/Article">
 
     <h1 itemprop="name"><?= $this->newsHeadline ?></h1>
 
@@ -31,7 +31,7 @@
 
     <?php if($this->addPodcast): ?>
         <div class="news_podcast">
-            <audio src="<?= \FilesModel::findByUuid($this->podcast)->path; ?>" controls ></audio>
+            <audio src="<?= \FilesModel::findByUuid($this->podcast)->path ?>" controls ></audio>
         </div>
     <?php endif;?>
 
