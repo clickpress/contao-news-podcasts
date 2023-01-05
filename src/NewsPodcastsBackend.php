@@ -164,7 +164,7 @@ class NewsPodcastsBackend extends News
                                                                                                        'newspodcastsfeedp'))
                 ) {
 
-                    $logger?->log(
+                    $logger->log(
                         LogLevel::ERROR,
                         'Not enough permissions to ' . Input::get('act') . ' podcast feed ID "' . Input::get('id') . '"',
                         ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]
@@ -188,7 +188,7 @@ class NewsPodcastsBackend extends News
 
             default:
                 if ('' !== Input::get('act')) {
-                    $logger?->log(
+                    $logger->log(
                         LogLevel::ERROR,
                         'Not enough permissions to ' . Input::get('act') . ' podcast feeds',
                         ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]

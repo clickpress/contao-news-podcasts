@@ -70,7 +70,7 @@ class NewsPodcasts extends Frontend
             else {
                 self::generateFiles($objFeed->row());
                 $logger = System::getContainer()->get('monolog.logger.contao');
-                $logger?->log(
+                $logger->log(
                     LogLevel::INFO,
                     'Generated podcast feed "' . $objFeed->feedName . '.xml"',
                     ['contao' => new ContaoContext(__METHOD__, TL_CRON)]
@@ -94,7 +94,7 @@ class NewsPodcasts extends Frontend
             while ($objFeed->next()) {
                 $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
                 self::generateFiles($objFeed->row());
-                $logger?->log(
+                $logger->log(
                     LogLevel::INFO,
                     'Generated podcast feed "' . $objFeed->feedName . '.xml"',
                     ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]
@@ -197,7 +197,7 @@ class NewsPodcasts extends Frontend
 
         if (null !== $newscategoriesRoot && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
             $db = System::getContainer()->get('database_connection');
-            $arrResult = $db?->executeQuery('SELECT news_id FROM tl_news_categories WHERE category_id = ?', [$arrFeed['news_categoriesRoot']])->fetchAllAssociative();
+            $arrResult = $db->executeQuery('SELECT news_id FROM tl_news_categories WHERE category_id = ?', [$arrFeed['news_categoriesRoot']])->fetchAllAssociative();
 
             $arrNewsId = [];
             foreach ($arrResult as $id) {
@@ -251,7 +251,7 @@ class NewsPodcasts extends Frontend
                         $arrUrls[$jumpTo] = false;
                     } else {
                         $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-                        $objUrlGenerator?->generate(
+                        $objUrlGenerator->generate(
                             ($objParent->alias ?: $objParent->id) . '/{items}',
                             [
                                 'items' => 'example',
@@ -355,7 +355,7 @@ class NewsPodcasts extends Frontend
         File::putContent(
             $shareDir . $strFile . '.xml',
             // replace insert tags
-            $parser?->replace((string) $objFeed->$strType())
+            $parser->replace((string) $objFeed->$strType())
         );
     }
 
@@ -396,7 +396,7 @@ class NewsPodcasts extends Frontend
         $rootDir = $container->getParameter('kernel.project_dir');
         $episodeImg = $container
             ->get('contao.image.image_factory')
-            ?->create(
+            ->create(
                 $rootDir . '/' . $objFile->path,
                 (new ResizeConfiguration())
                     ->setWidth(1400)

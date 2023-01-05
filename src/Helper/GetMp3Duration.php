@@ -35,13 +35,13 @@ class GetMp3Duration
     }
 
     //Read first mp3 frame only...  use for CBR constant bit rate MP3s
-    public function getDurationEstimate(): float|int
+    public function getDurationEstimate()
     {
         return $this->getDuration(true);
     }
 
     //Read entire file, frame by frame... ie: Variable Bit Rate (VBR)
-    public function getDuration($use_cbr_estimate = false): float|int
+    public function getDuration($use_cbr_estimate = false)
     {
         $fd = fopen($this->filename, 'rb');
 
