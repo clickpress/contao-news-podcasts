@@ -251,7 +251,7 @@ class NewsPodcasts extends Frontend
                         $arrUrls[$jumpTo] = false;
                     } else {
                         $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-                        $objUrlGenerator->generate(
+                        $strUrl = $objUrlGenerator->generate(
                             ($objParent->alias ?: $objParent->id) . '/{items}',
                             [
                                 'items' => 'example',
