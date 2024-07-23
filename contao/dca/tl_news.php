@@ -7,7 +7,7 @@
  *
  * @license LGPL-3.0-or-later
  */
-use Clickpress\NewsPodcasts\NewsPodcastsBackend;
+use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
 
 $GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][] = [
     NewsPodcastsBackend::class,

@@ -1,18 +1,19 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Clickpress\NewsPodcasts;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class NewsPodcastsBundle extends Bundle
+class NewsPodcastsBundle extends AbstractBundle
 {
+    public function loadExtension(
+        array $config,
+        ContainerConfigurator $containerConfigurator,
+        ContainerBuilder $containerBuilder,
+    ): void
+    {
+        $containerConfigurator->import('../config/services.yaml');
+    }
 }

@@ -1,15 +1,12 @@
 services:
     _defaults:
+        autowire: true
+        autoconfigure: true
         public: true
 
-    _instanceof:
-        Contao\CoreBundle\Framework\FrameworkAwareInterface:
-            calls:
-                - ["setFramework", ["@contao.framework"]]
-
-        Symfony\Component\DependencyInjection\ContainerAwareInterface:
-            calls:
-                - ["setContainer", ["@service_container"]]
+    Clickpress\NewsPodcasts\:
+        resource: ../src
+        exclude: ../src/{ContaoManager,DependencyInjection}
 
     clickpress_newspodcasts.listener.generatexml:
         class: Clickpress\NewsPodcasts\EventListener\GenerateXmlFilesListener
@@ -18,3 +15,11 @@ services:
     clickpress_newspodcasts.listener.removeoldfeeds:
         class: Clickpress\NewsPodcasts\EventListener\RemoveOldFeedsListener
         tags: [ 'terminal42_service_annotation' ]
+
+    Clickpress\NewsPodcasts\Helper\GetMp3Duration:
+      arguments:
+        $filename: ""
+
+    Clickpress\NewsPodcasts\Helper\PodcastFeedHelper:
+      arguments:
+        $strName: ""

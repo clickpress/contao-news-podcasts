@@ -11,6 +11,7 @@
 
 namespace Clickpress\NewsPodcasts\EventListener;
 
+use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Module;
 
@@ -22,8 +23,10 @@ class NewsListFetchItemsListener
     public function __invoke(array $newsArchives, ?bool $featuredOnly, int $limit, int $offset, Module $module)
     {
         if ($newsArchives) {
+            dump($newsArchives);
+
             // Query the database and return the records
-            $news = \Contao\NewsModel::findBy('id', $newsArchives);
+            $news = NewsPodcastsModel::findPublishedByPids($newsArchives);
 
             return $news;
         }

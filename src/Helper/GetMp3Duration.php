@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Clickpress\NewsPodcasts\Helper;
 
 use function ord;
@@ -19,7 +10,7 @@ class GetMp3Duration
 {
     protected string $filename;
 
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
         $this->filename = $filename;
     }

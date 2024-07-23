@@ -1,22 +1,17 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Clickpress\NewsPodcasts\Model;
+
+use Contao\NewsModel;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Reads news.
  *
  * @author Stefan Schulz-Lauterbach
  */
-class NewsPodcastsModel extends \NewsModel
+class NewsPodcastsModel extends NewsModel
 {
     /**
      * Table name.
@@ -38,6 +33,7 @@ class NewsPodcastsModel extends \NewsModel
      */
     public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrAddColumns = [], array $arrOptions = [])
     {
+
         if (!\is_array($arrPids) || empty($arrPids)) {
             return [];
         }
@@ -49,7 +45,9 @@ class NewsPodcastsModel extends \NewsModel
         $arrColumns[] = "$t.addPodcast='1'";
 
         // Never return unpublished elements in the back end, so they don't end up in the RSS feed
-        if (!BE_USER_LOGGED_IN || TL_MODE === 'BE') {
+        if (System::getContainer()->get('contao.routing.scope_matcher')
+            ->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''))
+            ) {
             $time = \Date::floorToMinute();
             $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
         }

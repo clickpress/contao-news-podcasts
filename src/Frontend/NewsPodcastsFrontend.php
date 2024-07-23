@@ -1,17 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Clickpress\NewsPodcasts;
+namespace Clickpress\NewsPodcasts\Frontend;
 
 use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
 use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
@@ -33,21 +22,7 @@ use Psr\Log\LogLevel;
 use StringUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * Class NewsPodcasts.
- *
- * @copyright  CLICKPRESS Internetagentur 2021
- * @author     Stefan Schulz-Lauterbach
- *
- * @property string $podcastUrl Url to podcast file
- * @property string $subtitle   Feed meta - subtitle
- * @property string $explicit   Explicit Content Flagging
- * @property string $author     Feed author
- * @property string $owner      Feed owner
- * @property string $email      Email address of the owner / author
- * @property string $category   Feed category
- */
-class NewsPodcasts extends Frontend
+class NewsPodcastsFrontend extends Frontend
 {
     /**
      * Update a particular RSS feed.

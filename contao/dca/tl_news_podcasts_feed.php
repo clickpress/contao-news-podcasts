@@ -1,18 +1,6 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * @license LGPL-3.0-or-later
- */
-
-/**
- * Table tl_news_podcasts_feed.
- */
-
-use Clickpress\NewsPodcasts\NewsPodcastsBackend;
+use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
 use Contao\Environment;
 
 $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [

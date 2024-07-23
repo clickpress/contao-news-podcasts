@@ -1,15 +1,8 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Clickpress\NewsPodcasts\Model;
+
+use Contao\Model;
 
 /**
  * Reads podcasts feeds.
@@ -39,7 +32,7 @@ namespace Clickpress\NewsPodcasts\Model;
  *
  * @author Stefan Schulz-Lauterbach
  */
-class NewsPodcastsFeedModel extends \Model
+class NewsPodcastsFeedModel extends Model
 {
     /**
      * Table name.
