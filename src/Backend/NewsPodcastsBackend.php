@@ -2,6 +2,7 @@
 
 namespace Clickpress\NewsPodcasts\Backend;
 
+use Clickpress\NewsPodcasts\Frontend\NewsPodcastsFrontend;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Contao\Config;
 use Contao\CoreBundle\Monolog\ContaoContext;
@@ -93,7 +94,8 @@ class NewsPodcastsBackend extends News
             return;
         }
 
-        NewsPodcasts::generateFeeds();
+        NewsPodcastsFrontend::generateFeeds();
+
 
         $session->set('podcasts_feed_updater', null);
     }
