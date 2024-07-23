@@ -9,14 +9,10 @@ use Contao\DataContainer;
 use Contao\Date;
 use Contao\Input;
 use Contao\News;
+use Contao\NewsArchiveModel;
 use Contao\StringUtil;
 use Contao\System;
-use Exception;
-use NewsArchiveModel;
-use Psr\Log\LogLevel;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -26,14 +22,6 @@ use Symfony\Component\Yaml\Yaml;
 class NewsPodcastsBackend extends News
 {
     private array $arrItunesCategories;
-
-    /**
-     * Import the back end user object.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Add the type of input.
@@ -87,8 +75,7 @@ class NewsPodcastsBackend extends News
         }
 
         // Store the ID in the session
-        /** @var SessionInterface $objSession */
-        $objSession = System::getContainer()->get('session');
+        $objSession = System::getContainer()->get('request_stack')->getSession();
         $session = $objSession->get('podcasts_feed_updater');
         $session[] = $dc->activeRecord->id;
         $objSession->set('podcasts_feed_updater', array_unique($session));
