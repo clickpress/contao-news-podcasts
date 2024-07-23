@@ -4,6 +4,7 @@ namespace Clickpress\NewsPodcasts\Backend;
 
 use Clickpress\NewsPodcasts\Frontend\NewsPodcastsFrontend;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\DataContainer;
@@ -105,11 +106,10 @@ class NewsPodcastsBackend extends News
      *
      * @return array
      */
-    public function getAllowedArchives(TokenInterface $token): array
+    public function getAllowedArchives(): array
     {
-        $user = $token->getUser();
-
-        if ($user->isAdmin) {
+        $user = BackendUser::getInstance();
+        if (BackendUser::getInstance()->isAdmin) {
             $objArchive = NewsArchiveModel::findAll();
         } else {
             $objArchive = NewsArchiveModel::findMultipleByIds($user->news);
@@ -125,6 +125,8 @@ class NewsPodcastsBackend extends News
 
         return $return;
     }
+
+
 
     /**
      * Contao hook removeOldFeeds.
@@ -176,7 +178,7 @@ class NewsPodcastsBackend extends News
      */
     public function getItunesCategories(): array
     {
-        $categories = Yaml::parseFile(__DIR__ . '/Resources/config/podcast_categories_list.yaml');
+        $categories = Yaml::parseFile(__DIR__ . '/../../config/podcast_categories_list.yaml');
 
         foreach ($categories as $v) {
             $this->arrItunesCategories[$v['category']] = [];

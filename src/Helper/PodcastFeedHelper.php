@@ -14,7 +14,7 @@ class PodcastFeedHelper extends Feed
     {
         $this->adjustPublicationDate();
 
-        $xml = '<?xml version="1.0" encoding="' . $GLOBALS['TL_CONFIG']['characterSet'] . '"?>';
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
         $xml .= '<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">';
         $xml .= '<channel>';
         $xml .= '<atom:link href="' . $this->podcastUrl . '" rel="self" type="application/rss+xml" />';

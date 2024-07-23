@@ -1,16 +1,17 @@
 <?php
 
+
 use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
+use Contao\DC_Table;
 use Contao\Environment;
 
 $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
     // Config
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'enableVersioning' => true,
         'onload_callback' => [
             [NewsPodcastsBackend::class, 'checkNewsCategoriesBundle'],
-            [NewsPodcastsBackend::class, 'checkPermission'],
             [NewsPodcastsBackend::class, 'generatePodcastFeed']
         ],
         'onsubmit_callback' => [
@@ -110,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
                 'tl_class' => 'w50',
             ],
             'save_callback' => [
-                ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'checkFeedAlias'],
+                [NewsPodcastsBackend::class, 'checkFeedAlias'],
             ],
             'sql' => "varchar(128) COLLATE utf8_bin NOT NULL default ''",
         ],
@@ -213,7 +214,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'exclude' => true,
             'search' => true,
             'inputType' => 'checkbox',
-            'options_callback' => ['Clickpress\\NewsPodcasts\\NewsPodcastsBackend', 'getAllowedArchives'],
+            'options_callback' => [NewsPodcastsBackend::class, 'getAllowedArchives'],
             'eval' => ['multiple' => true, 'mandatory' => true],
             'sql' => 'blob NULL',
         ],

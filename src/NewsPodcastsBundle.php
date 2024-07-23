@@ -10,10 +10,10 @@ class NewsPodcastsBundle extends AbstractBundle
 {
     public function loadExtension(
         array $config,
-        ContainerConfigurator $containerConfigurator,
-        ContainerBuilder $containerBuilder,
+        ContainerConfigurator $container,
+        ContainerBuilder $builder,
     ): void
     {
-        $containerConfigurator->import('../config/services.yaml');
+        $container->import('../config/services.yaml');
     }
 }

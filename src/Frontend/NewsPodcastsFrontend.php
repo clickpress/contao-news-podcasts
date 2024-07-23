@@ -2,12 +2,15 @@
 
 namespace Clickpress\NewsPodcasts\Frontend;
 
+use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
 use Clickpress\NewsPodcasts\Helper\GetMp3Duration;
 use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\Date;
 use Contao\Environment;
+use Contao\FeedItem;
 use Contao\File;
 use Contao\Files;
 use Contao\FilesModel;
@@ -15,15 +18,24 @@ use Contao\Frontend;
 use Contao\Image\ResizeConfiguration;
 use Contao\Input;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use DateTimeInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use StringUtil;
+
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsPodcastsFrontend extends Frontend
 {
+
+    public function __construct(
+        private readonly LoggerInterface $contaoCronLogger,
+        private readonly LoggerInterface $contaoErrorLogger,
+    ) {
+    }
+
     /**
      * Update a particular RSS feed.
      *
@@ -61,7 +73,7 @@ class NewsPodcastsFrontend extends Frontend
      */
     public static function generateFeeds(): void
     {
-        $logger = \System::getContainer()->get('monolog.logger.contao');
+        $logger = System::getContainer()->get('monolog.logger.contao');
 
         $objFeed = NewsPodcastsFeedModel::findAll();
 
@@ -94,7 +106,7 @@ class NewsPodcastsFrontend extends Frontend
                 $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
                 // Update the XML file
                 self::generateFiles($objFeed->row());
-                $logger = \System::getContainer()->get('monolog.logger.contao');
+                $logger = System::getContainer()->get('monolog.logger.contao');
                 $logger->log(
                     LogLevel::INFO,
                     'Generated podcast feed "' . $objFeed->feedName . '.xml"',
@@ -159,7 +171,7 @@ class NewsPodcastsFrontend extends Frontend
         $objFeed->lastBuildDate = $objDateTime->format(DateTimeInterface::RFC2822);
 
         //Add Feed Image
-        $objFile = \FilesModel::findByUuid($arrFeed['image']);
+        $objFile = FilesModel::findByUuid($arrFeed['image']);
 
         if (null !== $objFile) {
             $objFeed->imageUrl = Environment::get('base') . $objFile->path;
@@ -225,14 +237,14 @@ class NewsPodcastsFrontend extends Frontend
                     if (null === $objParent) {
                         $arrUrls[$jumpTo] = false;
                     } else {
-                        $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-                        $strUrl = $objUrlGenerator->generate(
-                            ($objParent->alias ?: $objParent->id) . '/{items}',
+                        $objUrlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+                        $strUrl = $objUrlGenerator->generate($objParent,
                             [
                                 'items' => 'example',
                                 '_domain' => $objParent->domain,
                                 '_ssl' => (bool) $objParent->rootUseSSL,
                             ],
+                            1,
                             UrlGeneratorInterface::ABSOLUTE_URL
                         );
                     }
@@ -244,7 +256,7 @@ class NewsPodcastsFrontend extends Frontend
                 }
 
                 $strUrl = $arrUrls[$jumpTo];
-                $objItem = new \FeedItem();
+                $objItem = new FeedItem();
 
                 $objItem->id = (int) $objPodcasts->id;
                 $objItem->guid = (int) $objPodcasts->id;
@@ -382,5 +394,15 @@ class NewsPodcastsFrontend extends Frontend
             ->getUrl($rootDir);
 
         return Environment::get('url') . '/' . $episodeImg;
+    }
+
+    public function getSlug(string $text, string $locale = 'en', string $validChars = '0-9a-z'): string
+    {
+        $options = [
+            'locale' => $locale,
+            'validChars' => $validChars,
+        ];
+
+        return $this->slug->generate($text, $options);
     }
 }

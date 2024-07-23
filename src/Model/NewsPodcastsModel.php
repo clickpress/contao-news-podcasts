@@ -2,6 +2,8 @@
 
 namespace Clickpress\NewsPodcasts\Model;
 
+use Contao\Date;
+use Contao\Model\Collection;
 use Contao\NewsModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +31,7 @@ class NewsPodcastsModel extends NewsModel
      * @param int   $intOffset   An optional offset
      * @param array $arrOptions  An optional options array
      *
-     * @return \Model\Collection|\NewsPodcastsModel[]|\NewsPodcastsModel|null A collection of models or null if there are no news
+     * @return Collection|NewsPodcastsModel[]|null A collection of models or null if there are no news
      */
     public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrAddColumns = [], array $arrOptions = [])
     {
@@ -48,7 +50,7 @@ class NewsPodcastsModel extends NewsModel
         if (System::getContainer()->get('contao.routing.scope_matcher')
             ->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''))
             ) {
-            $time = \Date::floorToMinute();
+            $time = Date::floorToMinute();
             $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
         }
 

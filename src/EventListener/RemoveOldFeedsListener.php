@@ -11,7 +11,7 @@
 
 namespace Clickpress\NewsPodcasts\EventListener;
 
-use Clickpress\NewsPodcasts\NewsPodcastsBackend;
+use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 
 /**
