@@ -2,14 +2,23 @@
 
 namespace Clickpress\NewsPodcasts\Helper;
 
-use \Contao\Feed;
-use \Contao\StringUtil;
+use Contao\Feed;
+use Contao\StringUtil;
 
+/**
+ * Generate podcast feed.
+ * @property string $podcastUrl
+ * @property string $owner
+ * @property string $author
+ * @property string $subtitle
+ * @property string $lastBuildDate
+ * @property string $email
+ * @property string $imageUrl
+ * @property string $category
+ */
 class PodcastFeedHelper extends Feed
 {
-    /**
-     * Generate podcast feed.
-     */
+
     public function generatePodcastFeed(): string
     {
         $this->adjustPublicationDate();
