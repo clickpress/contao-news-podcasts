@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 $GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][] = [
     NewsPodcastsBackend::class,
@@ -30,11 +31,13 @@ $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['child_record_callback'] = [
     NewsPodcastsBackend::class,
     'listNewsPodcastArticles',
 ];
-$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace(
-    'source;',
-    'source;{podcast_legend},addPodcast;',
-    $GLOBALS['TL_DCA']['tl_news']['palettes']['default']
-);
+
+PaletteManipulator::create()
+    ->addLegend('podcast_legend','source_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField('addPodcast', 'podcast_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('default', 'tl_news');
+
+
 $GLOBALS['TL_DCA']['tl_news']['palettes']['__selector__'][] = 'addPodcast';
 $GLOBALS['TL_DCA']['tl_news']['subpalettes']['addPodcast'] = 'podcast,explicit';
 
