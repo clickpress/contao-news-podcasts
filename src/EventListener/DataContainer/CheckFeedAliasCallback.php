@@ -21,10 +21,10 @@ class CheckFeedAliasCallback
             return $varValue;
         }
 
+        //@ToDo: use slug generator
         $varValue = StringUtil::standardize($varValue); // see #5096
 
-
-        //@ToDo: use slug generator
+        //@ToDo: do not import the automator
         $this->import('Automator');
 
         $arrFeeds = $this->Automator->purgeXmlFiles(true);
