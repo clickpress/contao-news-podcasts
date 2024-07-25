@@ -1,6 +1,5 @@
 <?php
 
-
 use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
 use Contao\DC_Table;
 use Contao\Environment;
@@ -12,10 +11,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
         'enableVersioning' => true,
         'onload_callback' => [
             [NewsPodcastsBackend::class, 'checkNewsCategoriesBundle'],
-            [NewsPodcastsBackend::class, 'generatePodcastFeed']
-        ],
-        'onsubmit_callback' => [
-            [NewsPodcastsBackend::class, 'schedulePodcastUpdate'],
         ],
         'sql' => [
             'keys' => [
@@ -110,10 +105,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
                 'maxlength' => 128,
                 'tl_class' => 'w50',
             ],
-            'save_callback' => [
-                [NewsPodcastsBackend::class, 'checkFeedAlias'],
-            ],
-            'sql' => "varchar(128) COLLATE utf8_bin NOT NULL default ''",
+            'sql' => "varchar(255) BINARY NOT NULL default ''"
         ],
         'language' => [
             'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['language'],
@@ -154,7 +146,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => [NewsPodcastsBackend::class, 'getItunesCategories'],
             'eval' => ['chosen' => true, 'mandatory' => true],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -214,7 +205,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'exclude' => true,
             'search' => true,
             'inputType' => 'checkbox',
-            'options_callback' => [NewsPodcastsBackend::class, 'getAllowedArchives'],
             'eval' => ['multiple' => true, 'mandatory' => true],
             'sql' => 'blob NULL',
         ],

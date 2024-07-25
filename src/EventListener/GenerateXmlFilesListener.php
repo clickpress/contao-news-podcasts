@@ -3,15 +3,14 @@
 namespace Clickpress\NewsPodcasts\EventListener;
 
 use Clickpress\NewsPodcasts\Frontend\NewsPodcastsFrontend;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Exception;
 
-/**
- * @Hook("generateXmlFiles", priority=10)
- */
+#[AsHook('generateXmlFiles', priority: 10)]
 class GenerateXmlFilesListener
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke(): void
     {

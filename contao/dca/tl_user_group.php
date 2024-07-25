@@ -1,16 +1,6 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * @license LGPL-3.0-or-later
- */
-
-/**
- * Extend default palette.
- */
+// @ToDo: Use palette manipulator
 $GLOBALS['TL_DCA']['tl_user_group']['palettes']['default'] = str_replace('newsfeedp;', 'newsfeedp,newspodcastsfeeds,newspodcastsfeedp;', $GLOBALS['TL_DCA']['tl_user_group']['palettes']['default']);
 
 /*

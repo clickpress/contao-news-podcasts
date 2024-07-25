@@ -1,36 +1,6 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * @license LGPL-3.0-or-later
- */
-use Clickpress\NewsPodcasts\Backend\NewsPodcastsBackend;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-
-$GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][] = [
-    NewsPodcastsBackend::class,
-    'generatePodcastFeed'
-];
-
-$GLOBALS['TL_DCA']['tl_news']['config']['oncut_callback'][] = [
-    NewsPodcastsBackend::class,
-    'schedulePodcastUpdate'
-];
-$GLOBALS['TL_DCA']['tl_news']['config']['ondelete_callback'][] = [
-    NewsPodcastsBackend::class,
-    'schedulePodcastUpdate'
-];
-$GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'][] = [
-    NewsPodcastsBackend::class,
-    'schedulePodcastUpdate'
-];
-$GLOBALS['TL_DCA']['tl_news']['list']['sorting']['child_record_callback'] = [
-    NewsPodcastsBackend::class,
-    'listNewsPodcastArticles',
-];
 
 PaletteManipulator::create()
     ->addLegend('podcast_legend','source_legend', PaletteManipulator::POSITION_APPEND)
