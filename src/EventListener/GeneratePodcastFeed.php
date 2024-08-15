@@ -6,7 +6,11 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 #[AsCallback(table: 'tl_news', target: 'config.onload')]
+#[AsCallback(table: 'tl_news', target: 'config.oncut')]
+#[AsCallback(table: 'tl_news', target: 'config.ondelete')]
+#[AsCallback(table: 'tl_news', target: 'config.onsubmit')]
 #[AsCallback(table: 'tl_news_podcasts_feed', target: 'config.onload')]
+#[AsCallback(table: 'tl_news_podcasts_feed', target: 'config.onsubmit')]
 class GeneratePodcastFeed
 {
     private RequestStack $requestStack;
