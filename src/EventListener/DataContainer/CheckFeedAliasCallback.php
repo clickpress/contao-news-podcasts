@@ -1,6 +1,7 @@
 <?php
 namespace Clickpress\NewsPodcasts\EventListener\DataContainer;
 
+use Clickpress\NewsPodcasts\Frontend\NewsPodcastsFrontend;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
@@ -26,8 +27,7 @@ class CheckFeedAliasCallback
             return $varValue;
         }
 
-        //@ToDo: use slug generator
-        $slug = $this->getSlug($varValue);
+        $slug = (new \Clickpress\NewsPodcasts\Frontend\NewsPodcastsFrontend)->getSlug($varValue);
 
         $arrFeeds = (new \Contao\Automator())->purgeXmlFiles(true);
 
@@ -37,15 +37,5 @@ class CheckFeedAliasCallback
         }
 
         return $slug;
-    }
-
-    public function getSlug(string $text, string $locale = 'en', string $validChars = '0-9a-z'): string
-    {
-        $options = [
-            'locale' => $locale,
-            'validChars' => $validChars,
-        ];
-
-        return $this->slug->generate($text, $options);
     }
 }
