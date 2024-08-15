@@ -8,7 +8,6 @@ use Clickpress\NewsPodcasts\Helper\PodcastFeedHelper;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsFeedModel;
 use Clickpress\NewsPodcasts\Model\NewsPodcastsModel;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\Date;
 use Contao\Environment;
 use Contao\FeedItem;
 use Contao\File;
@@ -22,19 +21,15 @@ use Contao\StringUtil;
 use Contao\System;
 use DateTimeInterface;
 use Exception;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsPodcastsFrontend extends Frontend
 {
-
-    public function __construct(
-        private readonly LoggerInterface $contaoCronLogger,
-        private readonly LoggerInterface $contaoErrorLogger,
-    ) {
-    }
+    /**
+     * @var mixed|null
+     */
+    private mixed $slug;
 
     /**
      * Update a particular RSS feed.
@@ -56,12 +51,9 @@ class NewsPodcastsFrontend extends Frontend
             } // Update XML file
             else {
                 self::generateFiles($objFeed->row());
-                $logger = System::getContainer()->get('monolog.logger.contao');
-                $logger->log(
-                    LogLevel::INFO,
-                    'Generated podcast feed "' . $objFeed->feedName . '.xml"',
-                    ['contao' => new ContaoContext(__METHOD__, TL_CRON)]
-                );
+
+                $this->logInfo('Generated podcast feed "' . $objFeed->feedName . '.xml"');
+
             }
         }
     }
@@ -73,21 +65,26 @@ class NewsPodcastsFrontend extends Frontend
      */
     public static function generateFeeds(): void
     {
-        $logger = System::getContainer()->get('monolog.logger.contao');
 
         $objFeed = NewsPodcastsFeedModel::findAll();
 
-        if (null !== $objFeed) {
-            while ($objFeed->next()) {
-                $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
-                self::generateFiles($objFeed->row());
-                $logger->log(
-                    LogLevel::INFO,
-                    'Generated podcast feed "' . $objFeed->feedName . '.xml"',
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]
-                );
-            }
+        if (null === $objFeed) {
+            return;
         }
+
+        while ($objFeed->next()) {
+            $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
+            self::generateFiles($objFeed->row());
+        }
+    }
+
+    public function logInfo(string $text): void
+    {
+        $logger = System::getContainer()->get('monolog.logger.contao');
+        $logger?->info(
+            $text,
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]
+        );
     }
 
     /**
@@ -101,18 +98,15 @@ class NewsPodcastsFrontend extends Frontend
     {
         $objFeed = NewsPodcastsFeedModel::findByArchive($intId);
 
-        if (null !== $objFeed) {
-            while ($objFeed->next()) {
-                $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
-                // Update the XML file
-                self::generateFiles($objFeed->row());
-                $logger = System::getContainer()->get('monolog.logger.contao');
-                $logger->log(
-                    LogLevel::INFO,
-                    'Generated podcast feed "' . $objFeed->feedName . '.xml"',
-                    ['contao' => new ContaoContext(__METHOD__, TL_CRON)]
-                );
-            }
+        if (null === $objFeed) {
+            return;
+        }
+
+        while ($objFeed->next()) {
+            $objFeed->feedName = $objFeed->alias ?: 'podcast_' . $objFeed->id;
+            // Update the XML file
+            self::generateFiles($objFeed->row());
+            $this->logInfo('Generated podcast feed "' . $objFeed->feedName . '.xml"');
         }
     }
 
@@ -184,7 +178,10 @@ class NewsPodcastsFrontend extends Frontend
 
         if (null !== $newscategoriesRoot && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
             $db = System::getContainer()->get('database_connection');
-            $arrResult = $db->executeQuery('SELECT news_id FROM tl_news_categories WHERE category_id = ?', [$arrFeed['news_categoriesRoot']])->fetchAllAssociative();
+            $arrResult = $db?->executeQuery(
+                'SELECT news_id FROM tl_news_categories WHERE category_id = ?',
+                [$arrFeed['news_categoriesRoot']]
+            )->fetchAllAssociative();
 
             $arrNewsId = [];
             foreach ($arrResult as $id) {
@@ -217,121 +214,126 @@ class NewsPodcastsFrontend extends Frontend
             );
         }
 
+        if (null === $objPodcasts) {
+            return;
+        }
+
+
+
         // Podcast items
-        if (null !== $objPodcasts) {
-            $arrUrls = [];
 
-            while ($objPodcasts->next()) {
-                $jumpTo = $objPodcasts->getRelated('pid')->jumpTo;
+        $arrUrls = [];
 
-                // No jumpTo page set (see #4784)
-                if (!$jumpTo) {
-                    continue;
+        while ($objPodcasts->next()) {
+            $jumpTo = $objPodcasts->getRelated('pid')->jumpTo;
+
+            // No jumpTo page set (see #4784)
+            if (!$jumpTo) {
+                continue;
+            }
+
+            // Get the jumpTo URL
+            if (!isset($arrUrls[$jumpTo])) {
+                $objParent = PageModel::findWithDetails($jumpTo);
+
+                // A jumpTo page is set but does no longer exist (see #5781)
+                if (null === $objParent) {
+                    $arrUrls[$jumpTo] = false;
+                } else {
+                    $objUrlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+                    $strUrl = $objUrlGenerator?->generate($objParent,
+                        [
+                            'items' => 'example',
+                            '_domain' => $objParent->domain,
+                            '_ssl' => (bool) $objParent->rootUseSSL,
+                        ],
+                        1,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
                 }
+            }
 
-                // Get the jumpTo URL
-                if (!isset($arrUrls[$jumpTo])) {
-                    $objParent = PageModel::findWithDetails($jumpTo);
+            // Skip the event if it requires a jumpTo URL but there is none
+            if (null === ($arrUrls[$jumpTo] ?? null) && 'default' === $objPodcasts->source) {
+                continue;
+            }
 
-                    // A jumpTo page is set but does no longer exist (see #5781)
-                    if (null === $objParent) {
-                        $arrUrls[$jumpTo] = false;
-                    } else {
-                        $objUrlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-                        $strUrl = $objUrlGenerator->generate($objParent,
-                            [
-                                'items' => 'example',
-                                '_domain' => $objParent->domain,
-                                '_ssl' => (bool) $objParent->rootUseSSL,
-                            ],
-                            1,
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        );
-                    }
-                }
+            $strUrl = $arrUrls[$jumpTo];
+            $objItem = new FeedItem();
 
-                // Skip the event if it requires a jumpTo URL but there is none
-                if (null === ($arrUrls[$jumpTo] ?? null) && 'default' === $objPodcasts->source) {
-                    continue;
-                }
+            $objItem->id = (int) $objPodcasts->id;
+            $objItem->guid = (int) $objPodcasts->id;
+            $objItem->alias = $objPodcasts->alias;
+            $objItem->time = $objPodcasts->time;
+            $objItem->headline = self::cleanHtml($objPodcasts->headline);
+            $objItem->subheadline = self::cleanHtml(
+                $objPodcasts->subheadline ?? $objPodcasts->description
+            );
 
-                $strUrl = $arrUrls[$jumpTo];
-                $objItem = new FeedItem();
+            // Add episode image
+            if (null !== $objPodcasts->singleSRC && $arrFeed['useEpisodeImage']) {
+                $objItem->image = self::generateEpisodeImage($objPodcasts->singleSRC);
+            }
 
-                $objItem->id = (int) $objPodcasts->id;
-                $objItem->guid = (int) $objPodcasts->id;
-                $objItem->alias = $objPodcasts->alias;
-                $objItem->time = $objPodcasts->time;
-                $objItem->headline = self::cleanHtml($objPodcasts->headline);
-                $objItem->subheadline = self::cleanHtml(
-                    $objPodcasts->subheadline ?? $objPodcasts->description
+            $objItem->link = $strLink . sprintf(
+                    $strUrl,
+                    (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
                 );
 
-                // Add episode image
-                if (null !== $objPodcasts->singleSRC && $arrFeed['useEpisodeImage']) {
-                    $objItem->image = self::generateEpisodeImage($objPodcasts->singleSRC);
-                }
+            $objDateTime = new \DateTime();
+            $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(DateTimeInterface::RFC2822);
+            $objAuthor = $objPodcasts->getRelated('author');
+            $objItem->author = $objAuthor->name;
+            $objItem->teaser = self::cleanHtml($objPodcasts->teaser ?? $objPodcasts->description);
 
-                $objItem->link = $strLink . sprintf(
-                        $strUrl,
-                        (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
-                    );
+            $objItem->explicit = $objPodcasts->explicit;
 
-                $objDateTime = new \DateTime();
-                $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(DateTimeInterface::RFC2822);
-                $objAuthor = $objPodcasts->getRelated('author');
-                $objItem->author = $objAuthor->name;
-                $objItem->teaser = self::cleanHtml($objPodcasts->teaser ?? $objPodcasts->description);
+            // Add the article image as enclosure
+            $objItem->addEnclosure($objFeed->imageUrl);
 
-                $objItem->explicit = $objPodcasts->explicit;
+            // Add the Audio File
+            if ($objPodcasts->podcast) {
+                $objFile = FilesModel::findByUuid($objPodcasts->podcast);
 
-                // Add the article image as enclosure
-                $objItem->addEnclosure($objFeed->imageUrl);
+                if (null !== $objFile) {
+                    // Add statistics service
+                    if (!empty($arrFeed['addStatistics'])) {
+                        // If no trailing slash given, add one
+                        $statisticsPrefix = rtrim($arrFeed['statisticsPrefix'], '/') . '/';
+                        $podcastPath = $statisticsPrefix . Environment::get('host') . '/' . preg_replace(
+                                '(^https?://)',
+                                '',
+                                $objFile->path
+                            );
+                    } else {
+                        $podcastPath = Environment::get('base') . System::urlEncode($objFile->path);
+                    }
 
-                // Add the Audio File
-                if ($objPodcasts->podcast) {
-                    $objFile = FilesModel::findByUuid($objPodcasts->podcast);
+                    $objItem->podcastUrl = $podcastPath;
 
-                    if (null !== $objFile) {
-                        // Add statistics service
-                        if (!empty($arrFeed['addStatistics'])) {
-                            // If no trailing slash given, add one
-                            $statisticsPrefix = rtrim($arrFeed['statisticsPrefix'], '/') . '/';
-                            $podcastPath = $statisticsPrefix . Environment::get('host') . '/' . preg_replace(
-                                    '(^https?://)',
-                                    '',
-                                    $objFile->path
-                                );
-                        } else {
-                            $podcastPath = Environment::get('base') . System::urlEncode($objFile->path);
-                        }
+                    // Prepare the duration / prefer linux tool mp3info
+                    $strRoot = System::getContainer()->getParameter('kernel.project_dir');
+                    $mp3file = new GetMp3Duration($strRoot . '/' . $objFile->path);
+                    if (self::checkMp3InfoInstalled()) {
+                        $shell_command = 'mp3info -p "%S" ' . escapeshellarg($strRoot . '/' . $objFile->path);
+                        $duration = (int) shell_exec($shell_command);
 
-                        $objItem->podcastUrl = $podcastPath;
-
-                        // Prepare the duration / prefer linux tool mp3info
-                        $strRoot = System::getContainer()->getParameter('kernel.project_dir');
-                        $mp3file = new GetMp3Duration($strRoot . '/' . $objFile->path);
-                        if (self::checkMp3InfoInstalled()) {
-                            $shell_command = 'mp3info -p "%S" ' . escapeshellarg($strRoot . '/' . $objFile->path);
-                            $duration = (int) shell_exec($shell_command);
-
-                            if (0 === $duration) {
-                                $duration = $mp3file->getDuration();
-                            }
-                        } else {
+                        if (0 === $duration) {
                             $duration = $mp3file->getDuration();
                         }
-
-                        $objPodcastFile = new File($objFile->path);
-
-                        $objItem->length = $objPodcastFile->size;
-                        $objItem->type = $objPodcastFile->mime;
-                        $objItem->duration = GetMp3Duration::formatTime($duration);
+                    } else {
+                        $duration = $mp3file->getDuration();
                     }
-                }
 
-                $objFeed->addItem($objItem);
+                    $objPodcastFile = new File($objFile->path);
+
+                    $objItem->length = $objPodcastFile->size;
+                    $objItem->type = $objPodcastFile->mime;
+                    $objItem->duration = GetMp3Duration::formatTime($duration);
+                }
             }
+
+            $objFeed->addItem($objItem);
         }
 
         // Create the file
@@ -342,7 +344,7 @@ class NewsPodcastsFrontend extends Frontend
         File::putContent(
             $shareDir . $strFile . '.xml',
             // replace insert tags
-            $parser->replace((string) $objFeed->$strType())
+            $parser?->replace((string) $objFeed->$strType())
         );
     }
 
@@ -379,11 +381,16 @@ class NewsPodcastsFrontend extends Frontend
     protected static function generateEpisodeImage($singleSrc): string
     {
         $objFile = FilesModel::findByUuid($singleSrc);
+
+        if (null === $objFile) {
+            return '';
+        }
+
         $container = System::getContainer();
         $rootDir = $container->getParameter('kernel.project_dir');
         $episodeImg = $container
             ->get('contao.image.image_factory')
-            ->create(
+            ?->create(
                 $rootDir . '/' . $objFile->path,
                 (new ResizeConfiguration())
                     ->setWidth(1400)
