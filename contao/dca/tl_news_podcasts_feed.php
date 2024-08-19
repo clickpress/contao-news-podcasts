@@ -42,27 +42,10 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             ],
         ],
         'operations' => [
-            'edit' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['edit'],
-                'href' => 'act=edit',
-                'icon' => 'edit.gif',
-            ],
-            'copy' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['copy'],
-                'href' => 'act=copy',
-                'icon' => 'copy.gif',
-            ],
-            'delete' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['delete'],
-                'href' => 'act=delete',
-                'icon' => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['tl_xing_category']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-            ],
-            'show' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['show'],
-                'href' => 'act=show',
-                'icon' => 'show.gif',
-            ],
+            'edit',
+            'copy',
+            'delete',
+            'show'
         ],
     ],
 
