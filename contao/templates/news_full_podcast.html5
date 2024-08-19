@@ -31,7 +31,7 @@
 
     <?php if($this->addPodcast): ?>
         <div class="news_podcast">
-            <audio src="<?= \FilesModel::findByUuid($this->podcast)->path ?>" controls ></audio>
+            <audio src="<?= Contao\FilesModel::findByUuid($this->podcast)->path ?>" controls ></audio>
         </div>
     <?php endif;?>
 
