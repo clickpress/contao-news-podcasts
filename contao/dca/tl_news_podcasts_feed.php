@@ -86,7 +86,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
         'title' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['title'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
@@ -94,7 +93,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'alias' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['alias'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
@@ -108,7 +106,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) BINARY NOT NULL default ''"
         ],
         'language' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['language'],
             'exclude' => true,
             'search' => true,
             'filter' => true,
@@ -117,7 +114,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(32) NOT NULL default ''",
         ],
         'subtitle' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['subtitle'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
@@ -125,7 +121,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'summary' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['summary'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'textarea',
@@ -133,7 +128,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => 'text NULL',
         ],
         'description' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['description'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'textarea',
@@ -141,8 +135,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => 'text NULL',
         ],
         'category' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['category'],
-
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
@@ -150,7 +142,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'explicit' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['explicit'],
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
@@ -160,28 +151,24 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'owner' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['owner'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'email' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['email'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => ['mandatory' => true, 'rgxp' => 'email', 'maxlength' => 255, 'tl_class' => 'w50'],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'author' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['author'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'image' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image'],
             'exclude' => true,
             'inputType' => 'fileTree',
             'eval' => [
@@ -194,14 +181,12 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => 'blob NULL',
         ],
         'useEpisodeImage' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['useEpisodeImage'],
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => ['tl_class' => 'w50 m12'],
             'sql' => "char(1) NOT NULL default ''",
         ],
         'archives' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['archives'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'checkbox',
@@ -209,7 +194,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => 'blob NULL',
         ],
         'maxItems' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['maxItems'],
             'default' => 25,
             'exclude' => true,
             'inputType' => 'text',
@@ -217,7 +201,6 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "smallint(5) unsigned NOT NULL default '0'",
         ],
         'feedBase' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase'],
             'default' => Environment::get('base'),
             'exclude' => true,
             'search' => true,
@@ -231,14 +214,12 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'addStatistics' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['addStatistics'],
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => ['submitOnChange' => true],
             'sql' => "char(1) NOT NULL default ''",
         ],
         'statisticsPrefix' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix'],
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
