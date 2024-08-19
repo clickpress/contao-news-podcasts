@@ -15,10 +15,10 @@ class GetPodcastCategoriesCallback
         $categories = Yaml::parseFile(__DIR__ . '/../../../config/podcast_categories_list.yaml');
 
         foreach ($categories as $v) {
-            $this->arrItunesCategories[$v['category']] = [];
+            $this->arrItunesCategories[$v['category']] = $v['category'];
             if (is_array($v['subcategories'])) {
                 foreach ($v['subcategories'] as $sub) {
-                    $this->arrItunesCategories[$v['category']][$v['category'] . '|' . $sub] = $sub;
+                    $this->arrItunesCategories[$v['category'] . '|' . $sub] = $sub;
                 }
             }
         }
