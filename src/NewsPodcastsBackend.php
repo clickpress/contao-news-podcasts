@@ -290,7 +290,7 @@ class NewsPodcastsBackend extends News
     /**
      * Check the RSS-feed alias.
      */
-    public function checkFeedAlias(string $varValue, DataContainer $dc): mixed
+    public function checkFeedAlias(string $varValue, DataContainer $dc): string
     {
         // No change or empty value
         if ($varValue === $dc->value || '' === $varValue) {
