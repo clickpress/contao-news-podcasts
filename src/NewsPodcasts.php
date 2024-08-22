@@ -159,8 +159,6 @@ class NewsPodcasts extends Frontend
             return;
         }
 
-        $strType = 'generatePodcastFeed';
-
         $strLink = $arrFeed['feedBase'] ?: Environment::get('base');
         $strFile = $arrFeed['feedName'];
 
@@ -243,34 +241,27 @@ class NewsPodcasts extends Frontend
                 }
 
                 // Get the jumpTo URL
-                if (!isset($arrUrls[$jumpTo])) {
-                    $objParent = PageModel::findWithDetails($jumpTo);
-
-                    // A jumpTo page is set but does no longer exist (see #5781)
-                    if (null === $objParent) {
-                        $arrUrls[$jumpTo] = false;
-                    } else {
-                        $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-                        $strUrl = $objUrlGenerator->generate(
-                            ($objParent->alias ?: $objParent->id) . '/{items}',
-                            [
-                                'items' => 'example',
-                                '_domain' => $objParent->domain,
-                                '_ssl' => (bool) $objParent->rootUseSSL,
-                            ],
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        );
-                    }
-                }
-
-                // Skip the event if it requires a jumpTo URL but there is none
-                if (null === ($arrUrls[$jumpTo] ?? null) && 'default' === $objPodcasts->source) {
+                $objParent = PageModel::findWithDetails($jumpTo);
+                // A jumpTo page is set but does no longer exist (see #5781)
+                if ($objParent === null)
+                {
                     continue;
                 }
 
-                $strUrl = $arrUrls[$jumpTo];
-                $objItem = new \FeedItem();
+                $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
+                $arrUrls[$jumpTo] = $objUrlGenerator->generate(
+                    ($objParent->alias ?: $objParent->id) . '/{items}',
+                    [
+                        'items' => $objPodcasts->alias,
+                        '_domain' => $objParent->domain,
+                        '_ssl' => (bool) $objParent->rootUseSSL,
+                    ],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
 
+                $strUrl = $arrUrls[$jumpTo];
+
+                $objItem = new \FeedItem();
                 $objItem->id = (int) $objPodcasts->id;
                 $objItem->guid = (int) $objPodcasts->id;
                 $objItem->alias = $objPodcasts->alias;
@@ -285,7 +276,7 @@ class NewsPodcasts extends Frontend
                     $objItem->image = self::generateEpisodeImage($objPodcasts->singleSRC);
                 }
 
-                $objItem->link = $strLink . sprintf(
+                $objItem->link = sprintf(
                         $strUrl,
                         (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
                     );
@@ -343,6 +334,7 @@ class NewsPodcasts extends Frontend
                     }
                 }
 
+
                 $objFeed->addItem($objItem);
             }
         }
@@ -355,7 +347,7 @@ class NewsPodcasts extends Frontend
         File::putContent(
             $shareDir . $strFile . '.xml',
             // replace insert tags
-            $parser->replace((string) $objFeed->$strType())
+            $parser->replace((string) $objFeed->generatePodcastFeed())
         );
     }
 
