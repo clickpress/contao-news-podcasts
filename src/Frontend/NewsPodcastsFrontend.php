@@ -162,7 +162,7 @@ class NewsPodcastsFrontend extends Frontend
         $objFile = FilesModel::findByUuid($arrFeed['image']);
 
         if (null !== $objFile) {
-            $objFeed->imageUrl = Environment::get('base') . $objFile->path;
+            $objFeed->imageUrl = Environment::get('base') . str_replace(' ', '%20', $objFile->path);
         }
 
         // Add filter, if newsCategories is installed
@@ -383,7 +383,7 @@ class NewsPodcastsFrontend extends Frontend
                 )
             ->getUrl($rootDir);
 
-        return Environment::get('url') . '/' . $episodeImg;
+        return Environment::get('url') . '/' . str_replace(' ', '%20', $episodeImg);
     }
 
     public function getSlug(string $text, string $locale = 'en', string $validChars = '0-9a-z'): string
