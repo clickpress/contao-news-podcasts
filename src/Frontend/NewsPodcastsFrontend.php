@@ -173,7 +173,7 @@ class NewsPodcastsFrontend extends Frontend
         if (null !== $newscategoriesRoot && NewsPodcastsBackend::checkNewsCategoriesBundle()) {
             $db = System::getContainer()->get('database_connection');
             $arrResult = $db?->executeQuery(
-                'SELECT news_id FROM tl_news_categories WHERE category_id = ?',
+                'SELECT news_id FROM `tl_news_categories` WHERE category_id = ?',
                 [$arrFeed['news_categoriesRoot']]
             )->fetchAllAssociative();
 
