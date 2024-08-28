@@ -18,7 +18,7 @@ class GetPodcastCategoriesCallback
             $this->arrItunesCategories[$v['category']] = $v['category'];
             if (is_array($v['subcategories'])) {
                 foreach ($v['subcategories'] as $sub) {
-                    $this->arrItunesCategories[$v['category'] . '|' . $sub] = $sub;
+                    $this->arrItunesCategories[$v['category'] . '|' . $sub] = $v['category'] . '|' . $sub;
                 }
             }
         }
