@@ -152,7 +152,7 @@ class NewsPodcastsFrontend extends Frontend
         $objFeed->author = $arrFeed['author'];
         $objFeed->owner = $arrFeed['owner'];
         $objFeed->email = $arrFeed['email'];
-        $objFeed->category = $arrFeed['category'];
+        $objFeed->category = StringUtil::deserialize($arrFeed['category']);;
         $objFeed->published = $arrFeed['tstamp'];
 
         $objDateTime = new \DateTime();

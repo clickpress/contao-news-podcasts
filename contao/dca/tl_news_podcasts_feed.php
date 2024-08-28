@@ -121,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'eval' => ['chosen' => true, 'isAssociative' => true, 'mandatory' => true],
+            'eval' => ['chosen' => true, 'multiple' => true, 'isAssociative' => true, 'mandatory' => true],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'explicit' => [

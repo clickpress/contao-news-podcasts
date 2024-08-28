@@ -14,7 +14,7 @@ use Contao\StringUtil;
  * @property string $lastBuildDate
  * @property string $email
  * @property string $imageUrl
- * @property string $category
+ * @property array $category
  */
 class PodcastFeedHelper extends Feed
 {
@@ -85,16 +85,29 @@ class PodcastFeedHelper extends Feed
     /**
      * Generate iTunes XML for categories.
      */
-    protected function generateItunesCategory(): string
+    protected function generateItunesCategory(string $categoryXml = ''): string
     {
-        $arrCategory = explode('|', $this->category);
 
-        $strCategoryXml = '<itunes:category text="' . htmlentities($arrCategory[0]) . '">';
-        if (isset($category[1])) {
-            $strCategoryXml .= '<itunes:category text="' . htmlentities($arrCategory[1]) . '" />';
+        $categories = [];
+
+        foreach ($this->category as $category) {
+            $array = explode('|', $category);
+
+            if (isset ($array[0])) {
+                $categories[$array[0]][] = $array[1];
+            }
         }
-        $strCategoryXml .= '</itunes:category>';
 
-        return $strCategoryXml;
+        foreach ($categories as $category => $subcategories) {
+            $categoryXml .= '<itunes:category text="' . htmlentities($category) . '">';
+            if (isset($subcategories)) {
+                foreach ($subcategories as $subcategory) {
+                    $categoryXml .= '<itunes:category text="' . htmlentities($subcategory) . '" />';
+                }
+            }
+            $categoryXml .= '</itunes:category>';
+        }
+
+        return $categoryXml;
     }
 }
