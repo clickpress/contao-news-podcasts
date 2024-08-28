@@ -23,7 +23,12 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['podcast'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news']['podcast'],
     'exclude' => true,
     'inputType' => 'fileTree',
-    'eval' => ['filesOnly' => true, 'extensions' => 'mp3', 'fieldType' => 'radio', 'mandatory' => true],
+    'eval' => [
+        'filesOnly' => true,
+        'extensions' => 'mp3,mp4,ogg,mov,wav,webm,flac,aac',
+        'fieldType' => 'radio',
+        'mandatory' => true
+    ],
     'sql' => 'binary(16) NULL',
 ];
 
