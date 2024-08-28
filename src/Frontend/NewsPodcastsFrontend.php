@@ -372,7 +372,7 @@ class NewsPodcastsFrontend extends Frontend
         $container = System::getContainer();
         $rootDir = $container->getParameter('kernel.project_dir');
         $episodeImg = $container
-            ->get('contao.image.image_factory')
+            ->get('contao.image_factory')
             ?->create(
                 $rootDir . '/' . $objFile->path,
                 (new ResizeConfiguration())
