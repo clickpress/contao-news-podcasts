@@ -14,7 +14,7 @@ use Contao\StringUtil;
  * @property string $lastBuildDate
  * @property string $email
  * @property string $imageUrl
- * @property array $category
+ * @property array|string $category
  */
 class PodcastFeedHelper extends Feed
 {
@@ -90,19 +90,28 @@ class PodcastFeedHelper extends Feed
 
         $categories = [];
 
-        foreach ($this->category as $category) {
-            $array = explode('|', $category);
+        if (is_array($this->category)) {
+            foreach ($this->category as $category) {
+                $array = explode('|', $category);
 
+                if (isset ($array[0])) {
+                    $categories[$array[0]][] = $array[1] ?? null;
+                }
+            }
+        } else {
+            // Added backward compatibility
+            $array = explode('|', $this->category);
             if (isset ($array[0])) {
                 $categories[$array[0]][] = $array[1];
             }
         }
 
+
         foreach ($categories as $category => $subcategories) {
             $categoryXml .= '<itunes:category text="' . htmlentities($category) . '">';
             if (isset($subcategories)) {
                 foreach ($subcategories as $subcategory) {
-                    $categoryXml .= '<itunes:category text="' . htmlentities($subcategory) . '" />';
+                    $categoryXml .= (!empty($subcategory)) ? '<itunes:category text="' . htmlentities($subcategory) . '" />' : '';
                 }
             }
             $categoryXml .= '</itunes:category>';
