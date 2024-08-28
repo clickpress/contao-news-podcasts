@@ -26,10 +26,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsPodcastsFrontend extends Frontend
 {
-    /**
-     * @var mixed|null
-     */
-    private mixed $slug;
 
     /**
      * Update a particular RSS feed.
@@ -231,7 +227,6 @@ class NewsPodcastsFrontend extends Frontend
             }
 
             // Get the jumpTo URL
-
             $objParent = PageModel::findWithDetails($jumpTo);
             // A jumpTo page is set but does no longer exist (see #5781)
             if ($objParent === null)
@@ -239,14 +234,10 @@ class NewsPodcastsFrontend extends Frontend
                 continue;
             }
 
-            $objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
-            $arrUrls[$jumpTo] = $objUrlGenerator->generate(
-                ($objParent->alias ?: $objParent->id) . '/{items}',
-                [
-                    'items' => $objPodcasts->alias,
-                    '_domain' => $objParent->domain,
-                    '_ssl' => (bool) $objParent->rootUseSSL,
-                ],
+            $urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+            $arrUrls[$jumpTo] = $urlGenerator?->generate(
+                $objPodcasts->current(),
+                [],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
@@ -269,7 +260,7 @@ class NewsPodcastsFrontend extends Frontend
 
             $objItem->link = sprintf(
                 $strUrl,
-                (('' !== $objPodcasts->alias && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objPodcasts->alias : $objPodcasts->id)
+                (('' !== $objPodcasts->alias) ? $objPodcasts->alias : $objPodcasts->id)
             );
 
             $objDateTime = new \DateTime();
