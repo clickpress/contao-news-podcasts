@@ -7,7 +7,6 @@ PaletteManipulator::create()
     ->addField('addPodcast', 'podcast_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_news');
 
-
 $GLOBALS['TL_DCA']['tl_news']['palettes']['__selector__'][] = 'addPodcast';
 $GLOBALS['TL_DCA']['tl_news']['subpalettes']['addPodcast'] = 'podcast,explicit';
 
