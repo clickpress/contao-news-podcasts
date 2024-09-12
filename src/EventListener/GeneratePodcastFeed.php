@@ -3,6 +3,7 @@ namespace Clickpress\NewsPodcasts\EventListener;
 
 use Clickpress\NewsPodcasts\Frontend\NewsPodcastsFrontend;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 #[AsCallback(table: 'tl_news', target: 'config.onload')]
@@ -20,6 +21,9 @@ class GeneratePodcastFeed
         $this->requestStack = $requestStack;
     }
 
+    /**
+     * @throws Exception
+     */
     public function __invoke(): void
     {
         $session = $this->requestStack->getSession();
