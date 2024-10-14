@@ -219,7 +219,7 @@ $GLOBALS['TL_DCA']['tl_news_podcasts_feed'] = [
 ];
 
 // Inject, if NewsCategories is installed
-if(NewsPodcastsBackend::checkNewsCategoriesBundle()){
+if (NewsPodcastsBackend::checkNewsCategoriesBundle()) {
     $GLOBALS['TL_DCA']['tl_news_podcasts_feed']['fields']['news_categoriesRoot'] = [
         'label' => &$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['news_categoriesRoot'],
         'exclude' => true,
@@ -229,4 +229,3 @@ if(NewsPodcastsBackend::checkNewsCategoriesBundle()){
         'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
     ];
 }
-

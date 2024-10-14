@@ -11,7 +11,7 @@ class NewsPodcastsBundle extends AbstractBundle
     public function loadExtension(
         array $config,
         ContainerConfigurator $container,
-        ContainerBuilder $builder,
+        ContainerBuilder $builder
     ): void
     {
         $container->import('../config/services.yaml');

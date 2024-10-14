@@ -3,7 +3,7 @@
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 PaletteManipulator::create()
-    ->addLegend('podcast_legend','source_legend', PaletteManipulator::POSITION_APPEND)
+    ->addLegend('podcast_legend', 'source_legend', PaletteManipulator::POSITION_APPEND)
     ->addField('addPodcast', 'podcast_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_news');
 

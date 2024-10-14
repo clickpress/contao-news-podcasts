@@ -14,6 +14,7 @@ use Contao\StringUtil;
  * @property string $lastBuildDate
  * @property string $email
  * @property string $imageUrl
+ * @property string $explicit
  * @property array|string $category
  */
 class PodcastFeedHelper extends Feed
@@ -38,8 +39,8 @@ class PodcastFeedHelper extends Feed
 
         $xml .= '<language>' . $this->language . '</language>';
         $xml .= '<itunes:explicit>' . ((!empty($this->explicit)) ? StringUtil::specialchars(
-                $this->explicit
-            ) : 'no') . '</itunes:explicit>';
+            $this->explicit
+        ) : 'no') . '</itunes:explicit>';
         $xml .= '<link>' . StringUtil::specialchars($this->link) . '</link>';
         $xml .= '<lastBuildDate>' . $this->lastBuildDate . '</lastBuildDate>';
         $xml .= '<generator>Contao Open Source CMS - News Podcasts</generator>';
@@ -63,8 +64,8 @@ class PodcastFeedHelper extends Feed
             $xml .= '<link>' . StringUtil::specialchars($objItem->link) . '</link>';
             $xml .= '<pubDate>' . $objItem->published . '</pubDate>';
             $xml .= (!empty($objItem->explicit)) ? '<itunes:explicit>' . StringUtil::specialchars(
-                    $objItem->explicit
-                ) . '</itunes:explicit>' : '';
+                $objItem->explicit
+            ) . '</itunes:explicit>' : '';
             $xml .= '<itunes:duration>' . $objItem->duration . '</itunes:duration>';
 
             // Add the GUID
@@ -94,14 +95,14 @@ class PodcastFeedHelper extends Feed
             foreach ($this->category as $category) {
                 $array = explode('|', $category);
 
-                if (isset ($array[0])) {
+                if (isset($array[0])) {
                     $categories[$array[0]][] = $array[1] ?? null;
                 }
             }
         } else {
             // Added backward compatibility
             $array = explode('|', $this->category);
-            if (isset ($array[0])) {
+            if (isset($array[0])) {
                 $categories[$array[0]][] = $array[1];
             }
         }

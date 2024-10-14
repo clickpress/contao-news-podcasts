@@ -1,13 +1,5 @@
 <?php
 
-/*
- * This file is part of NewsPodcasts.
- *
- * (c) Stefan Schulz-Lauterbach <ssl@clickpress.de>
- *
- * @license LGPL-3.0-or-later
- */
-
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['alias']['0'] = 'Feed alias';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['alias']['1'] = 'Hier können Sie einen eindeutigen Dateinamen (ohne Endung) eingeben. Die XML-Datei wird automatisch im share-Ordner Ihrer Contao-Installation erstellt, z.B. als share/podcast.xml';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['archives']['0'] = 'News Archiv';
@@ -35,7 +27,7 @@ $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['edit']['1'] = 'Feed ID %s bearbeit
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['email']['0'] = 'E-Mail';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['email']['1'] = 'Die E-Mail-Adresse des Podcast-Besitzers';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase']['0'] = 'Basis URL';
-$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase']['1'] = 'Bitte geben Sie die Basis-URL mit Protokoll (z.B. http://) ein.';
+$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['feedBase']['1'] = 'Bitte geben Sie die Basis-URL mit Protokoll (z.B. https://) ein.';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image_legend'] = 'Bild Einstellungen';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image']['0'] = 'Podcast-Bild';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['image']['1'] = 'Gibt die Grafik für den Podcast an. Die Covergrafik muss eine JPEG- oder PNG-Datei im RGB-Farbformat mit einer Größe von mindestens 1400 x 1400 Pixeln und höchstens 3000 x 3000 Pixeln sein.';
@@ -66,5 +58,4 @@ $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statistic_legend'] = 'Statistiken'
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['addStatistics']['0'] = 'Externes Statistiktool aktivieren';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['addStatistics']['1'] = 'Sie können hier externe Statistiktools, wie blubrry.com oder podtrac.com aktivieren';
 $GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix']['0'] = 'Media Redirect URL Präfix';
-$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix']['1'] = 'Bitte tragen Sie hier Ihren URL Präfix ein (z.B. für blubrry http://media.blubrry.com/mein_account)';
-
+$GLOBALS['TL_LANG']['tl_news_podcasts_feed']['statisticsPrefix']['1'] = 'Bitte tragen Sie hier Ihren URL Präfix ein (z.B. für blubrry https://media.blubrry.com/mein_account)';

@@ -19,10 +19,15 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use DateTime;
 use DateTimeInterface;
 use Exception;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use function implode;
+use function is_array;
+use function is_callable;
 
 class NewsPodcastsFrontend extends Frontend
 {
@@ -132,7 +137,7 @@ class NewsPodcastsFrontend extends Frontend
     {
         $arrArchives = StringUtil::deserialize($arrFeed['archives']);
 
-        if (!\is_array($arrArchives) || empty($arrArchives)) {
+        if (!is_array($arrArchives) || empty($arrArchives)) {
             return;
         }
 
@@ -152,10 +157,10 @@ class NewsPodcastsFrontend extends Frontend
         $objFeed->author = $arrFeed['author'];
         $objFeed->owner = $arrFeed['owner'];
         $objFeed->email = $arrFeed['email'];
-        $objFeed->category = StringUtil::deserialize($arrFeed['category']);;
+        $objFeed->category = StringUtil::deserialize($arrFeed['category']);
         $objFeed->published = $arrFeed['tstamp'];
 
-        $objDateTime = new \DateTime();
+        $objDateTime = new DateTime();
         $objFeed->lastBuildDate = $objDateTime->format(DateTimeInterface::RFC2822);
 
         //Add Feed Image
@@ -183,7 +188,7 @@ class NewsPodcastsFrontend extends Frontend
             }
 
             if (!empty($arrNewsId['id'])) {
-                $arrColumns[] = 'id IN(' . \implode(',', $arrNewsId['id']) . ')';
+                $arrColumns[] = 'id IN(' . implode(',', $arrNewsId['id']) . ')';
             }
         }
 
@@ -229,8 +234,7 @@ class NewsPodcastsFrontend extends Frontend
             // Get the jumpTo URL
             $objParent = PageModel::findWithDetails($jumpTo);
             // A jumpTo page is set but does no longer exist (see #5781)
-            if ($objParent === null)
-            {
+            if ($objParent === null) {
                 continue;
             }
 
@@ -263,7 +267,7 @@ class NewsPodcastsFrontend extends Frontend
                 (('' !== $objPodcasts->alias) ? $objPodcasts->alias : $objPodcasts->id)
             );
 
-            $objDateTime = new \DateTime();
+            $objDateTime = new DateTime();
             $objItem->published = $objDateTime->setTimestamp((int) $objPodcasts->date)->format(DateTimeInterface::RFC2822);
             $objAuthor = $objPodcasts->getRelated('author');
             $objItem->author = $objAuthor->name;
@@ -284,10 +288,10 @@ class NewsPodcastsFrontend extends Frontend
                         // If no trailing slash given, add one
                         $statisticsPrefix = rtrim($arrFeed['statisticsPrefix'], '/') . '/';
                         $podcastPath = $statisticsPrefix . Environment::get('host') . '/' . preg_replace(
-                                '(^https?://)',
-                                '',
-                                $objFile->path
-                            );
+                            '(^https?://)',
+                            '',
+                            $objFile->path
+                        );
                     } else {
                         $podcastPath = Environment::get('base') . System::urlEncode($objFile->path);
                     }
@@ -327,7 +331,7 @@ class NewsPodcastsFrontend extends Frontend
         File::putContent(
             $shareDir . $strFile . '.xml',
             // replace insert tags
-            $parser?->replace((string) $objFeed->generatePodcastFeed())
+            $parser?->replace($objFeed->generatePodcastFeed())
         );
     }
 
@@ -336,7 +340,7 @@ class NewsPodcastsFrontend extends Frontend
      */
     protected static function checkMp3InfoInstalled(): bool
     {
-        if (\is_callable('shell_exec') && false === stripos(ini_get('disable_functions'), 'shell_exec')) {
+        if (is_callable('shell_exec') && false === stripos(ini_get('disable_functions'), 'shell_exec')) {
             $check = shell_exec('type -P mp3info');
 
             return !empty($check);
@@ -380,7 +384,7 @@ class NewsPodcastsFrontend extends Frontend
                     ->setHeight(1400)
                     ->setMode(ResizeConfiguration::MODE_CROP)
                     ->setZoomLevel(50)
-                )
+            )
             ->getUrl($rootDir);
 
         return Environment::get('url') . '/' . str_replace(' ', '%20', $episodeImg);

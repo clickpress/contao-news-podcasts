@@ -30,7 +30,7 @@ class ScheduleFeedUpdateListener
         }
 
         // Store the ID in the session
-        $objSession = System::getContainer()->get('request_stack')->getSession();
+        $objSession = System::getContainer()->get('request_stack')?->getSession();
         $session = $objSession->get('podcasts_feed_updater');
         $session[] = $dc->activeRecord->id;
         $objSession->set('podcasts_feed_updater', array_unique($session));

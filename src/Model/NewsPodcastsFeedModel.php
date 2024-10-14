@@ -45,16 +45,16 @@ class NewsPodcastsFeedModel extends Model
     /**
      * Find all feeds which include a certain news archive.
      *
-     * @param int   $intId      The news archive ID
+     * @param int $intId      The news archive ID
      * @param array $arrOptions An optional options array
      *
      * @return Collection|NewsPodcastsFeedModel|null A collection of models or null if the news archive is not part of a feed
      */
-    public static function findByArchive($intId, array $arrOptions = []): Collection|NewsPodcastsFeedModel|null
+    public static function findByArchive(int $intId, array $arrOptions = []): Collection|NewsPodcastsFeedModel|null
     {
         $t = static::$strTable;
 
-        return static::findBy(["$t.archives LIKE '%\"" . (int) $intId . "\"%'"], null, $arrOptions);
+        return static::findBy(["$t.archives LIKE '%\"" . $intId . "\"%'"], null, $arrOptions);
     }
 
     /**

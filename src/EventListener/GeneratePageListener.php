@@ -11,6 +11,8 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\StringUtil;
 
+use function is_array;
+
 /**
  * @internal
  */
@@ -30,7 +32,7 @@ class GeneratePageListener
     {
         $podcastfeeds = StringUtil::deserialize($layoutModel->podcastfeeds);
 
-        if (empty($podcastfeeds) || !\is_array($podcastfeeds)) {
+        if (empty($podcastfeeds) || !is_array($podcastfeeds)) {
             return;
         }
 

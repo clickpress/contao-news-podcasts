@@ -8,6 +8,8 @@ use Contao\NewsModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 
+use function is_array;
+
 /**
  * Reads news.
  *
@@ -15,13 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class NewsPodcastsModel extends NewsModel
 {
-    /**
-     * Table name.
-     *
-     * @var string
-     */
-    protected static $strTable = 'tl_news';
-
     /**
      * Find published news items by their parent ID.
      *
@@ -33,10 +28,10 @@ class NewsPodcastsModel extends NewsModel
      *
      * @return Collection|NewsPodcastsModel[]|null A collection of models or null if there are no news
      */
-    public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrAddColumns = [], array $arrOptions = [])
+    public static function findPublishedByPids($arrPids, $blnFeatured = null, $intLimit = 0, $intOffset = 0, array $arrAddColumns = [], array $arrOptions = []): Collection|array|null
     {
 
-        if (!\is_array($arrPids) || empty($arrPids)) {
+        if (!is_array($arrPids) || empty($arrPids)) {
             return [];
         }
 
@@ -48,8 +43,8 @@ class NewsPodcastsModel extends NewsModel
 
         // Never return unpublished elements in the back end, so they don't end up in the RSS feed
         if (System::getContainer()->get('contao.routing.scope_matcher')
-            ->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''))
-            ) {
+            ?->isBackendRequest(System::getContainer()->get('request_stack')?->getCurrentRequest() ?? Request::create(''))
+        ) {
             $time = Date::floorToMinute();
             $arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
         }
